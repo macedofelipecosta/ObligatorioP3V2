@@ -1,5 +1,8 @@
-﻿using LogicaConexion.EntityFramework;
-
+﻿using LogicaAplicacion.Excepciones.CabanaExcepciones;
+using LogicaConexion.EntityFramework;
+using LogicaConexion.Excepciones.CabanaExcepciones;
+using LogicaConexion.Excepciones.MantenimientoExceptions;
+using LogicaConexion.Excepciones.TipoExcepciones;
 
 namespace LogicaAplicacion.CasosDeUso.Cabanas
 {
@@ -13,7 +16,16 @@ namespace LogicaAplicacion.CasosDeUso.Cabanas
 
         public int GetLastId()
         {
-            return _repoCabana.UltimoId();
+            try
+            {
+                return _repoCabana.UltimoId();
+            }
+            catch (CabanaContextException e) { throw new CabanaLAException(e.Message); }
+            catch (CabanaLAException e) { throw new CabanaLAException(e.Message); }
+            catch (MantenimientoContextException e) { throw new CabanaLAException(e.Message); }
+            catch (TipoContextException e) { throw new CabanaLAException(e.Message); }
+            catch (Exception e) { throw new CabanaLAException(e.Message); }
+
         }
     }
 }

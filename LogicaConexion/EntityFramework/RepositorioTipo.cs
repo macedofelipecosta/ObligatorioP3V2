@@ -1,7 +1,9 @@
-﻿using LogicaConexion.Excepciones.TipoExcepciones;
+﻿using LogicaConexion.Excepciones.MantenimientoExceptions;
+using LogicaConexion.Excepciones.TipoExcepciones;
 using LogicaNegocio.Entidades;
 using LogicaNegocio.InterfaceRepositorio;
 using LogicaNegocio.ValueObject;
+using Microsoft.IdentityModel.Tokens;
 
 namespace LogicaConexion.EntityFramework
 {
@@ -16,9 +18,14 @@ namespace LogicaConexion.EntityFramework
 
         public void Add(Tipo obj)
         {
+            try
+            {
+                _hotelContext.Tipos.Add(obj);
+                _hotelContext.SaveChanges();
+            }
+            catch (TipoContextException e) { throw new TipoContextException(e.Message); }
+            catch (Exception) { throw new TipoContextException("Ha ocurrido un error inesperado!"); }
 
-            _hotelContext.Tipos.Add(obj);
-            _hotelContext.SaveChanges();
         }
 
         public void Delete(string nombre)
@@ -30,56 +37,71 @@ namespace LogicaConexion.EntityFramework
                 _hotelContext.Tipos.Remove(tipo);
                 _hotelContext.SaveChanges();
             }
-            catch (TipoContextException e)
-            {
-
-                throw new TipoContextException(e.Message);
-            }
+            catch (TipoContextException e) { throw new TipoContextException(e.Message); }
+            catch (Exception) { throw new TipoContextException("Ha ocurrido un error inesperado!"); }
 
         }
 
         public Tipo Get(string nombre)
         {
+            try
+            {
+                if (string.IsNullOrEmpty(nombre))
+                {
+                    throw new TipoContextException("No se ha recibido ninugún nombre de tipo de cabaña.");
+                }
+                var tipo = _hotelContext.Tipos.FirstOrDefault(tipo => tipo.Nombre == nombre);
+                if (tipo == null)
+                {
+                    throw new TipoContextException($"No se ha encontrado el tipo de cabaña de nombre: {nombre}!");
+                }
+                return tipo;
+            }
+            catch (TipoContextException e) { throw new TipoContextException(e.Message); }
+            catch (Exception) { throw new TipoContextException("Ha ocurrido un error inesperado!"); }
 
-            if (string.IsNullOrEmpty(nombre))
-            {
-                throw new TipoContextException("No se ha recibido ninugún nombre de tipo de cabaña.");
-            }
-            var tipo = _hotelContext.Tipos.FirstOrDefault(tipo => tipo.Nombre == nombre);
-            if (tipo == null)
-            {
-                throw new TipoContextException("No se ha encontrado el tipo de cabaña");
-            }
-            return tipo;
         }
 
         public IEnumerable<Tipo> GetAll()
         {
             try
             {
-                return _hotelContext.Tipos.ToList();
+                var list = _hotelContext.Tipos.ToList();
+                if (list.IsNullOrEmpty()) throw new TipoContextException("No se han encontrado tipos de cabaña para mostrar!");
+                return list;
             }
-            catch (TipoContextException)
-            {
-                throw new TipoContextException("No se han encontrado cabañas a mostrar");
-            }
+            catch (TipoContextException e) { throw new TipoContextException(e.Message); }
+            catch (Exception) { throw new TipoContextException("Ha ocurrido un error inesperado!"); }
 
         }
 
         public IEnumerable<Tipo> GetTipoByString(string dato)
         {
-            IEnumerable<Tipo> _filtrado =
-                 _hotelContext.Tipos.
-                 Where(tipo => tipo.Nombre.Contains(dato)).
-                 ToList();
-            return _filtrado;
+            try
+            {
+                IEnumerable<Tipo> _filtrado =
+                                 _hotelContext.Tipos.
+                                 Where(tipo => tipo.Nombre.Contains(dato)).
+                                 ToList();
+                if (_filtrado.IsNullOrEmpty()) throw new TipoContextException($"No se han encotrado tipo de cabañas por el nombre: {dato}");
+                return _filtrado;
+            }
+            catch (TipoContextException e) { throw new TipoContextException(e.Message); }
+            catch (Exception) { throw new TipoContextException("Ha ocurrido un error inesperado!"); }
+
         }
 
         public int CostoPersona(string nombre)
         {
-            var tipo = Get(nombre);
-            var costo = tipo.CostoHuesped.Data;
-            return costo;
+            try
+            {
+                var tipo = Get(nombre);
+                var costo = tipo.CostoHuesped.Data;
+                return costo;
+            }
+            catch (TipoContextException e) { throw new TipoContextException(e.Message); }
+            catch (Exception) { throw new TipoContextException("Ha ocurrido un error inesperado!"); }
+
         }
 
         public void Update(string nombre, string descripcion, int costoHuesped)
@@ -93,10 +115,8 @@ namespace LogicaConexion.EntityFramework
                 _hotelContext.Tipos.Update(tipo);
                 _hotelContext.SaveChanges();
             }
-            catch (TipoContextException)
-            {
-                throw new TipoContextException($"Ha ocurrido un error al modificar el tipo ({nombre}) de cabaña!");
-            }
+            catch (TipoContextException e) { throw new TipoContextException(e.Message); }
+            catch (Exception) { throw new TipoContextException("Ha ocurrido un error inesperado!"); }
         }
 
         private void TipoUsado(string nombre)
@@ -106,13 +126,11 @@ namespace LogicaConexion.EntityFramework
                 var list = _hotelContext.Cabanas.Where(x => x.NombreTipo.Data == nombre).ToList();
                 if (list.Count > 0)
                 {
-                    throw new TipoContextException($"No se puede eliminar el tipo {nombre}, existen cabañas con este tipo!");
+                    throw new TipoContextException($"No se puede eliminar el tipo {nombre}, existen cabañas usando este tipo de cabaña!");
                 }
             }
-            catch (TipoContextException e)
-            {
-                throw new TipoContextException(e.Message);
-            }
+            catch (TipoContextException e) { throw new TipoContextException(e.Message); }
+            catch (Exception) { throw new TipoContextException("Ha ocurrido un error inesperado!"); }
         }
     }
 }

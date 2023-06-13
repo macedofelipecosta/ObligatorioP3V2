@@ -1,6 +1,9 @@
 ﻿
 using LogicaAplicacion.Excepciones.CabanaExcepciones;
 using LogicaConexion.EntityFramework;
+using LogicaConexion.Excepciones.CabanaExcepciones;
+using LogicaConexion.Excepciones.MantenimientoExceptions;
+using LogicaConexion.Excepciones.TipoExcepciones;
 using LogicaNegocio.Entidades;
 using LogicaNegocio.Excepciones.CabanaExceptions;
 
@@ -18,13 +21,11 @@ namespace LogicaAplicacion.CasosDeUso.Cabanas
             {
                 return _repositorioCabana.FiltradoNombre(dato);
             }
-            catch (CabanaLAException e)
-            {
-
-                throw new CabanaLAException(e.Message);
-            }
-
-
+            catch (CabanaContextException e) { throw new CabanaLAException(e.Message); }
+            catch (CabanaLAException e) { throw new CabanaLAException(e.Message); }
+            catch (MantenimientoContextException e) { throw new CabanaLAException(e.Message); }
+            catch (TipoContextException e) { throw new CabanaLAException(e.Message); }
+            catch (Exception e) { throw new CabanaLAException(e.Message); }
 
         }
     }

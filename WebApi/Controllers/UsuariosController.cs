@@ -1,10 +1,13 @@
 ﻿using AutoMapper;
 using LogicaAplicacion.CasosDeUso.Usuarios;
+using LogicaAplicacion.Excepciones.UsuarioExceptions;
 using LogicaNegocio.Entidades;
-using LogicaNegocio.Excepciones.UsuarioExceptions;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
+using System.Net.Http;
+using System.Web.Http;
+using System.Web;
 using WebApi.DTOs;
-using WebApi.Excepciones.TipoExcepciones;
 using WebApi.Excepciones.UsuarioException;
 using WebApi.JWT;
 
@@ -40,23 +43,65 @@ namespace WebApi.Controllers
         /// <param name="objDto"></param>
         /// <returns>Devuelve un jwToken para ser utilizado en las futuras solicitudes, el token caduca a los 60 minutos</returns>
         [HttpPost("~/Usuarios/IniciarSesion")]
-        public ActionResult IniciarSesion(UsuarioDTO objDto)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public HttpResponseMessage IniciarSesion(UsuarioDTO objDto)
         {
-            try { 
-                string jwtPass;
-
-            Usuario usuario = _mapper.Map<Usuario>(objDto);
-            if (_inicioSesion.IniciarSesion(usuario))
+            try
             {
-                jwtPass = _jwt.GenerarTokenJWT(usuario.Email);
-                return Ok(jwtPass);
+                string jwtToken;
+                HttpResponseMessage response;
+                Usuario usuario = _mapper.Map<Usuario>(objDto);
+                if (_inicioSesion.IniciarSesion(usuario))
+                {
+                    jwtToken = _jwt.GenerarTokenJWT(usuario.Email);
+
+                    // Crea una instancia de HttpResponseMessage con el código de estado OK
+                    response = new HttpResponseMessage(HttpStatusCode.OK);
+
+                    // Agrega el token JWT al cuerpo de la respuesta
+                    response.Content = new StringContent(jwtToken);
+                    response.Headers.Add("Authorization", jwtToken);
+
+
+                    return response;
+
+                }
+                else throw new UsuarioControllerException("Usuario o contraseña incorrectos!");
+
             }
-                return BadRequest(new UsuarioControllerException("Hubo un problema al iniciar sesión!"));
+            catch (UsuarioLAException e)
+            {
+                // Si las credenciales son inválidas, devuelve una respuesta HTTP Unauthorized
+                HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.Unauthorized);
+                response.Content = new StringContent(e.Message);
+                response.Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("text/plain");
+
+                return response;
             }
             catch (UsuarioControllerException e)
             {
-                return StatusCode(500,e.Message);
+                // Si se produce una excepción desconocida, devuelve una respuesta HTTP BadRequest
+                HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                response.Content = new StringContent(e.Message);
+                response.Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("text/plain");
+
+                return response;
             }
+            catch (Exception e)
+            {
+                // Si se produce una excepción desconocida, devuelve una respuesta HTTP Internal Server Error
+                HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                response.Content = new StringContent(e.Message);
+                response.Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("text/plain");
+
+                return response;
+            }
+
+
+
         }
 
     }

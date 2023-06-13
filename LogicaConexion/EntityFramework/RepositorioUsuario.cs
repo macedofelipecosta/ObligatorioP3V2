@@ -1,11 +1,8 @@
-﻿using LogicaConexion.Excepciones.UsuarioExceptions;
+﻿using LogicaConexion.Excepciones.TipoExcepciones;
+using LogicaConexion.Excepciones.UsuarioExceptions;
 using LogicaNegocio.Entidades;
 using LogicaNegocio.InterfaceRepositorio;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.IdentityModel.Tokens;
 
 namespace LogicaConexion.EntityFramework
 {
@@ -16,57 +13,68 @@ namespace LogicaConexion.EntityFramework
 
         public void Add(Usuario obj)
         {
-            //validaciones usuario?
-            _hotelContext.Usuarios.Add(obj);
-            _hotelContext.SaveChanges();
+            try
+            {
+                _hotelContext.Usuarios.Add(obj);
+                _hotelContext.SaveChanges();
+            }
+            catch (UsuarioContextException e) { throw new UsuarioContextException(e.Message); }
+            catch (Exception) { throw new UsuarioContextException("Ha ocurrido un error inesperado!"); }
+
         }
 
         public void Delete(string email)
         {
-            var usuario = Get(email);
-            _hotelContext.Usuarios.Remove(usuario);
-            _hotelContext.SaveChanges();
+            try
+            {
+                var usuario = Get(email);
+                _hotelContext.Usuarios.Remove(usuario);
+                _hotelContext.SaveChanges();
+            }
+            catch (UsuarioContextException e) { throw new UsuarioContextException(e.Message); }
+            catch (Exception) { throw new UsuarioContextException("Ha ocurrido un error inesperado!"); }
+
 
         }
 
         public Usuario Get(string email)
         {
-            if (string.IsNullOrEmpty(email))
+            try
             {
-                throw new UsuarioContextException("No se ha recibido email");
+                if (string.IsNullOrEmpty(email)) throw new UsuarioContextException("No se ha recibido email");
+                var usuario = _hotelContext.Usuarios.FirstOrDefault(x => x.Email == email);
+                if (usuario == null) throw new UsuarioContextException($"No se ha encontrado el email: {email}");
+                
+                return usuario;
             }
-
-            var usuario = _hotelContext.Usuarios.FirstOrDefault(x => x.Email == email);
-            if (usuario == null)
-            {
-                throw new UsuarioContextException("No se ha encontrado el email.");
-            }
-            return usuario;
+            catch (UsuarioContextException e) { throw new UsuarioContextException(e.Message); }
+            catch (Exception) { throw new UsuarioContextException("Ha ocurrido un error inesperado!"); }
 
         }
 
         public IEnumerable<Usuario> GetAll()
         {
-            return _hotelContext.Usuarios.ToList();
+            try
+            {
+                var list=_hotelContext.Usuarios.ToList();
+                if (list.IsNullOrEmpty()) throw new UsuarioContextException("No se han encontrado usuarios registrados!");
+                return list;
+            }
+            catch (UsuarioContextException e) { throw new UsuarioContextException(e.Message); }
+            catch (Exception) { throw new UsuarioContextException("Ha ocurrido un error inesperado!"); }
+
         }
 
         public void Update(string email)
         {
-            if (string.IsNullOrEmpty(email))
-            {
-                throw new UsuarioContextException("No se ha recibido un usuario.");
-            }
             try
             {
                 var usuario = Get(email);
                 _hotelContext.Usuarios.Update(usuario);
                 _hotelContext.SaveChanges();
             }
-            catch (UsuarioContextException)
-            {
-
-                throw new UsuarioContextException("Ha ocurrido un error al actualizar el usuario.");
-            }
+            catch (UsuarioContextException e) { throw new UsuarioContextException(e.Message); }
+            catch (Exception) { throw new UsuarioContextException("Ha ocurrido un error inesperado!"); }
         }
     }
 }

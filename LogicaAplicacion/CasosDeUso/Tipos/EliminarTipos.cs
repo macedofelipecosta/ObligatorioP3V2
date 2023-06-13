@@ -3,6 +3,10 @@ using LogicaAplicacion.CasosDeUso.Interfaces;
 using LogicaNegocio.Entidades;
 using LogicaNegocio.Excepciones.TipoExceptions;
 using LogicaAplicacion.Excepciones.TipoExcepciones;
+using LogicaConexion.Excepciones.CabanaExcepciones;
+using LogicaConexion.Excepciones.TipoExcepciones;
+using LogicaNegocio.Excepciones.MantenimientoExceptions;
+using LogicaConexion.Excepciones.MantenimientoExceptions;
 
 namespace LogicaAplicacion.CasosDeUso.Tipos
 {
@@ -21,11 +25,11 @@ namespace LogicaAplicacion.CasosDeUso.Tipos
             {
                 _repositorioTipo.Delete(nombre);
             }
-            catch (TipoLAException)
-            {
-
-                throw new TipoLAException("No se ha podido eliminar este tipo de cabaña!");
-            }
+            catch (CabanaContextException e) { throw new TipoLAException(e.Message); }
+            catch (TipoContextException e) { throw new TipoLAException(e.Message); }
+            catch (MantenimientoContextException e) { throw new TipoLAException(e.Message); }
+            catch (TipoLAException e) { throw new TipoLAException(e.Message); }
+            catch (Exception e) { throw new TipoLAException(e.Message); }
         }
 
        

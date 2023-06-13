@@ -1,5 +1,8 @@
 ﻿using LogicaAplicacion.Excepciones.TipoExcepciones;
 using LogicaConexion.EntityFramework;
+using LogicaConexion.Excepciones.CabanaExcepciones;
+using LogicaConexion.Excepciones.MantenimientoExceptions;
+using LogicaConexion.Excepciones.TipoExcepciones;
 using LogicaNegocio.Entidades;
 using LogicaNegocio.Excepciones.TipoExcepciones;
 using LogicaNegocio.Excepciones.TipoExceptions;
@@ -34,11 +37,11 @@ namespace LogicaAplicacion.CasosDeUso.Tipos
                 }
                 _repositorioTipo.Update(nombre, descripcion, costoHuesped);
             }
-            catch (TipoLAException)
-            {
-
-                throw new TipoLAException("No se ha podido modificar el tipo de cabaña!");
-            }
+            catch (CabanaContextException e) { throw new TipoLAException(e.Message); }
+            catch (TipoContextException e) { throw new TipoLAException(e.Message); }
+            catch (MantenimientoContextException e) { throw new TipoLAException(e.Message); }
+            catch (TipoLAException e) { throw new TipoLAException(e.Message); }
+            catch (Exception e) { throw new TipoLAException(e.Message); }
 
 
 

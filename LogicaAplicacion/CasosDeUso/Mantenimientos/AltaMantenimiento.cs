@@ -1,4 +1,8 @@
-﻿using LogicaConexion.EntityFramework;
+﻿using LogicaAplicacion.Excepciones.CabanaExcepciones;
+using LogicaConexion.EntityFramework;
+using LogicaConexion.Excepciones.CabanaExcepciones;
+using LogicaConexion.Excepciones.MantenimientoExceptions;
+using LogicaConexion.Excepciones.TipoExcepciones;
 using LogicaNegocio.Entidades;
 using LogicaNegocio.Excepciones.MantenimientoExceptions;
 
@@ -18,10 +22,11 @@ namespace LogicaAplicacion.CasosDeUso.Mantenimientos
             {
                 _repoMantenimiento.Add(obj);
             }
-            catch (MantenimientoLAException)
-            {
-                throw new MantenimientoLAException($"No se ha podido agregar este mantenimiento: {obj.Id}!");
-            }
+            catch (CabanaContextException e) { throw new MantenimientoLAException(e.Message); }
+            catch (TipoContextException e) { throw new MantenimientoLAException(e.Message); }
+            catch (MantenimientoContextException e) { throw new MantenimientoLAException(e.Message); }
+            catch (MantenimientoLAException e) { throw new MantenimientoLAException(e.Message); }
+            catch (Exception e) { throw new MantenimientoLAException(e.Message); }
 
 
         }

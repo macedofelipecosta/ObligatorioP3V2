@@ -22,34 +22,50 @@ namespace LogicaConexion.EntityFramework
                 _hotelContext.Mantenimientos.Add(obj);
                 _hotelContext.SaveChanges();
             }
-            catch (MantenimientoContextException)
-            {
-
-                throw new MantenimientoContextException("No se ha podido guardar el mantenimiento!");
-            }
+            catch (MantenimientoContextException e) { throw new MantenimientoContextException(e.Message); }
+            catch (Exception) { throw new MantenimientoContextException("Ha ocurrido un error inesperado!"); }
 
         }
 
         public IEnumerable<Mantenimiento> GetAll()
         {
-            return _hotelContext.Mantenimientos.ToList();
+            try
+            {
+                return _hotelContext.Mantenimientos.ToList();
+            }
+            catch (MantenimientoContextException e) { throw new MantenimientoContextException(e.Message); }
+            catch (Exception) { throw new MantenimientoContextException("Ha ocurrido un error inesperado!"); }
+
         }
 
         public int UltimoId()
         {
-            if (_hotelContext.Mantenimientos.IsNullOrEmpty())
+            try
             {
-                return 0;
+                if (_hotelContext.Mantenimientos.IsNullOrEmpty())
+                {
+                    return 0;
+                }
+                int last = _hotelContext.Mantenimientos.OrderBy(x => x.Id).LastOrDefault().Id + 1;
+                return last;
             }
-            int last = _hotelContext.Mantenimientos.OrderBy(x => x.Id).LastOrDefault().Id + 1;
-            return last;
+            catch (MantenimientoContextException e) { throw new MantenimientoContextException(e.Message); }
+            catch (Exception) { throw new MantenimientoContextException("Ha ocurrido un error inesperado!"); }
+
         }
 
         public IEnumerable<Mantenimiento> GetForCabanaId(int numeroHabitacion)
         {
-            var mantenimientos = _hotelContext.Mantenimientos.Where(
-                x => x.Cabana.NumeroHabitacion == numeroHabitacion).ToList();
-            return mantenimientos;
+            try
+            {
+                var mantenimientos = _hotelContext.Mantenimientos.Where(
+                                x => x.Cabana.NumeroHabitacion == numeroHabitacion).ToList();
+                if (mantenimientos.IsNullOrEmpty()) throw new MantenimientoContextException($"No se han encontrado mantenimientos para este número de habitación {numeroHabitacion}!");
+                return mantenimientos;
+            }
+            catch (MantenimientoContextException e) { throw new MantenimientoContextException(e.Message); }
+            catch (Exception) { throw new MantenimientoContextException("Ha ocurrido un error inesperado!"); }
+
         }
 
     }

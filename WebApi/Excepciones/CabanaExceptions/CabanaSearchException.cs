@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace LogicaNegocio.Excepciones.CabanaExceptions
+﻿namespace WebApi.Excepciones.CabanaExceptions
 {
     public class CabanaSearchException : DomainException
     {
@@ -15,6 +9,5 @@ namespace LogicaNegocio.Excepciones.CabanaExceptions
         public CabanaSearchException(string message) : base(message)
         {
         }
-
     }
 }

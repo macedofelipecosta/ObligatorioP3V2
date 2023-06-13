@@ -1,4 +1,5 @@
 ﻿using LogicaConexion.Excepciones.CabanaExcepciones;
+using LogicaConexion.Excepciones.HotelException;
 using LogicaNegocio.Entidades;
 using LogicaNegocio.Excepciones.CabanaExcepciones;
 using LogicaNegocio.InterfaceRepositorio;
@@ -30,10 +31,8 @@ namespace LogicaConexion.EntityFramework
                 int last = _hotelContext.Cabanas.OrderBy(x => x.NumeroHabitacion).LastOrDefault().NumeroHabitacion + 1;
                 return last;
             }
-            catch (CabanaContextException)
-            {
-                throw new CabanaContextException("Ha ocurrido un error al encontrar ultimo id");
-            }
+            catch (CabanaContextException e) { throw new CabanaContextException(e.Message); }
+            catch (Exception) { throw new CabanaContextException("Ha ocurrido un error inesperado!"); }
         }
 
         public void Add(Cabana obj)
@@ -50,90 +49,121 @@ namespace LogicaConexion.EntityFramework
             {
                 throw new CabanaContextException(e.Message);
             }
-
+            catch (HotelContextException e) { throw new CabanaContextException(e.Message); }
+            catch (Exception) { throw new CabanaContextException("Ha ocurrido un error a nivel de Add-Cabana Context!"); }
         }
         public Cabana Get(int numeroHabitacion)
         {
             try
             {
                 Cabana cabana = _hotelContext.Cabanas.Where(x => x.NumeroHabitacion == numeroHabitacion).FirstOrDefault();
+                if (cabana == null) throw new CabanaContextException($"No se han encontrado cabañas por este número de habitación: {numeroHabitacion}");
                 return cabana;
             }
-            catch (CabanaContextException)
-            {
-                throw new CabanaContextException("No se ha encontrado el número de habitación!");
-            }
-
-
+            catch (CabanaContextException e) { throw new CabanaContextException(e.Message); }
+            catch (Exception) { throw new CabanaContextException("Ha ocurrido un error inesperado!"); }
         }
 
         public Cabana Get(string nombre)
         {
 
-            //To Do: validaciones parse para que este todo en minusculas?, buscar por numero? 
-
-            if (string.IsNullOrEmpty(nombre))
+            try
             {
-                throw new Exception("No se ha recibido ninugún nombre de tipo de cabaña.");
+                if (string.IsNullOrEmpty(nombre))
+                {
+                    throw new CabanaContextException("No se ha recibido ninugún nombre de tipo de cabaña.");
+                }
+                var cabana = _hotelContext.Cabanas.FirstOrDefault(cabana => cabana.Nombre.Data == nombre);
+                if (cabana == null)
+                {
+                    throw new CabanaContextException($"No se ha encontrado el tipo de cabaña: {nombre}");
+                }
+                return cabana;
             }
-            var cabana = _hotelContext.Cabanas.FirstOrDefault(cabana => cabana.Nombre.Data == nombre);
-            if (cabana == null)
-            {
-                throw new CabanaContextException("No se ha encontrado el tipo de cabaña");
-            }
-            return cabana;
+            catch (CabanaContextException e) { throw new CabanaContextException(e.Message); }
+            catch (Exception) { throw new CabanaContextException("Ha ocurrido un error inesperado!"); }
         }
 
         public IEnumerable<Cabana> GetAll()
         {
-            return _hotelContext.Cabanas.ToList();
+            try
+            {
+                return _hotelContext.Cabanas.ToList();
+            }
+            catch (Exception) { throw new CabanaContextException("Ha ocurrido un error inesperado!"); }
+
         }
 
         public IEnumerable<Cabana> FiltradoNombre(string dato)
         {
-            var lista = _hotelContext.Cabanas.Where(item => item.Nombre.Data.Contains(dato)).ToList();
-            return lista;
+            try
+            {
+                var lista = _hotelContext.Cabanas.Where(item => item.Nombre.Data.Contains(dato)).ToList();
+                if (lista.IsNullOrEmpty()) throw new CabanaContextException($"No se ha encontrado ninguna cabaña con el nombrbe: {dato}!");
+                return lista;
+            }
+            catch (CabanaContextException e) { throw new CabanaContextException(e.Message); }
+            catch (Exception) { throw new CabanaContextException("Ha ocurrido un error inesperado!"); }
+
         }
         public IEnumerable<Cabana> FiltradoTipo(string dato)
         {
-            var lista = _hotelContext.Cabanas.Where(item => item.NombreTipo.Data.Contains(dato)).ToList();
-            return lista;
+            try
+            {
+                var lista = _hotelContext.Cabanas.Where(item => item.NombreTipo.Data.Contains(dato)).ToList();
+                if (lista.IsNullOrEmpty()) throw new CabanaContextException($"No se han encontrado cabañas del tipo: {dato}");
+                return lista;
+            }
+            catch (CabanaContextException e) { throw new CabanaContextException(e.Message); }
+            catch (Exception) { throw new CabanaContextException("Ha ocurrido un error inesperado!"); }
+
         }
         public IEnumerable<Cabana> FiltradoNumero(int dato)
         {
-            //var  = _hotelContext.Cabanas.Where(item => item.CapacidadHabitacion.Equals(dato)).ToList();
-            var lista = _hotelContext.Cabanas.Where(item => item.CapacidadHabitacion.Data >= dato).ToList();
-            return lista;
+            try
+            {
+                var lista = _hotelContext.Cabanas.Where(item => item.CapacidadHabitacion.Data >= dato).ToList();
+                if (lista.IsNullOrEmpty()) throw new CabanaContextException($"No se han encontrado cabañas con capacidad en habitación de {dato} personas!");
+                return lista;
+            }
+            catch (CabanaContextException e) { throw new CabanaContextException(e.Message); }
+            catch (Exception) { throw new CabanaContextException("Ha ocurrido un error inesperado!"); }
+
         }
         public IEnumerable<Cabana> AlquilerHabilitado(bool HabilitadoAReservas)
         {
-            var lista = _hotelContext.Cabanas.Where(item => item.HabilitadoAReservas.Data == HabilitadoAReservas).ToList();
-            return lista;
+            try
+            {
+                var lista = _hotelContext.Cabanas.Where(item => item.HabilitadoAReservas.Data == HabilitadoAReservas).ToList();
+                if (lista.IsNullOrEmpty()&&HabilitadoAReservas==true) throw new CabanaContextException($"No se han encontrado cabañas habilitadas a alquilar!");
+                if (lista.IsNullOrEmpty() && HabilitadoAReservas == false) throw new CabanaContextException($"No se han encontrado cabañas inhabilitadas a alquilar!");
+                return lista;
+            }
+            catch (CabanaContextException e) { throw new CabanaContextException(e.Message); }
+            catch (Exception) { throw new CabanaContextException("Ha ocurrido un error inesperado!"); }
+
         }
 
         private void NombreEnUso(string nombreP)
         {
             try
             {
-                var nombre = _hotelContext.Cabanas.Where(x => x.Nombre.Data == nombreP).ToList();
-                if (nombre.Count>0) { throw new CabanaContextException("El nombre de ingresado para esta cabaña ya existe en la base de datos!"); }
+                var nombre = _hotelContext.Cabanas.Where(x => x.Nombre.Data == nombreP).ToList();                
+                if (nombre.Count > 0) { throw new CabanaContextException("El nombre de ingresado para esta cabaña ya existe en la base de datos!"); }
             }
-            catch (CabanaContextException e)
-            {
-                throw new CabanaContextException(e.Message);
-            }
+            catch (CabanaContextException e) { throw new CabanaContextException(e.Message); }
+            catch (Exception) { throw new CabanaContextException("Ha ocurrido un error inesperado!"); }
+
         }
         private void NumeroHabitacionEnUso(int dato)
         {
             try
             {
                 var numero = _hotelContext.Cabanas.Where(x => x.NumeroHabitacion == dato).ToList();
-                if (numero.Count>0) { throw new CabanaContextException("El numero de habitación ingresado ya existe!"); }
+                if (numero.Count > 0) { throw new CabanaContextException("El numero de habitación ingresado ya existe!"); }
             }
-            catch (CabanaContextException e)
-            {
-                throw new CabanaContextException(e.Message);
-            }
+            catch (CabanaContextException e) { throw new CabanaContextException(e.Message); }
+            catch (Exception) { throw new CabanaContextException("Ha ocurrido un error inesperado!"); }
         }
     }
 }

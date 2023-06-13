@@ -1,4 +1,7 @@
-﻿using LogicaNegocio.Entidades;
+﻿using LogicaConexion.Excepciones.CabanaExcepciones;
+using LogicaConexion.Excepciones.MantenimientoExceptions;
+using LogicaConexion.Excepciones.TipoExcepciones;
+using LogicaNegocio.Entidades;
 using LogicaNegocio.Excepciones.MantenimientoExceptions;
 using System;
 using System.Collections.Generic;
@@ -30,11 +33,11 @@ namespace LogicaAplicacion.CasosDeUso.Mantenimientos
                     throw new MantenimientoLAException("La fecha debe ser anterior al día de hoy!");
                 }
             }
-            catch (MantenimientoLAException e)
-            {
-
-                throw new MantenimientoLAException(e.Message);
-            }
+            catch (CabanaContextException e) { throw new MantenimientoLAException(e.Message); }
+            catch (TipoContextException e) { throw new MantenimientoLAException(e.Message); }
+            catch (MantenimientoContextException e) { throw new MantenimientoLAException(e.Message); }
+            catch (MantenimientoLAException e) { throw new MantenimientoLAException(e.Message); }
+            catch (Exception e) { throw new MantenimientoLAException(e.Message); }
         }
 
     }

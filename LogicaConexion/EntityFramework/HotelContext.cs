@@ -31,8 +31,7 @@ namespace LogicaConexion.EntityFramework
             }
             catch (Exception e)
             {
-
-                throw new HotelContextException( e.Message);
+                throw new HotelContextException("Hubo un error en HotelContext!");
             }
 
 

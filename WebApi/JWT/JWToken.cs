@@ -40,16 +40,16 @@ namespace WebApi.JWT
             };
 
             // Configurar la configuración del token JWT
-            var configuracionToken = new JwtSecurityToken(
-                "Felipe",
-                usuario,
-                reclamaciones,
-                expires: DateTime.UtcNow.AddMinutes(60),
+            var token = new JwtSecurityToken(
+                issuer: "Obligatorio2P3",
+                audience: "localHost",
+                claims: reclamaciones,
+                expires: DateTime.UtcNow.AddMinutes(20),
                 signingCredentials: credenciales
             );
 
             // Generar el token JWT
-            var tokenJWT = new JwtSecurityTokenHandler().WriteToken(configuracionToken);
+            var tokenJWT = new JwtSecurityTokenHandler().WriteToken(token);
 
             return tokenJWT;
         }

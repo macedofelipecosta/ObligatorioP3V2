@@ -1,9 +1,13 @@
 ﻿using LogicaAplicacion.CasosDeUso.Interfaces;
 using LogicaAplicacion.Excepciones.CabanaExcepciones;
 using LogicaConexion.EntityFramework;
+using LogicaConexion.Excepciones.CabanaExcepciones;
+using LogicaConexion.Excepciones.MantenimientoExceptions;
+using LogicaConexion.Excepciones.TipoExcepciones;
 using LogicaNegocio.Entidades;
 using LogicaNegocio.Excepciones;
 using LogicaNegocio.Excepciones.CabanaExceptions;
+using System.Linq.Expressions;
 
 namespace LogicaAplicacion.CasosDeUso.Cabanas
 {
@@ -23,11 +27,11 @@ namespace LogicaAplicacion.CasosDeUso.Cabanas
             {
                 _repositorioCabana.Add(obj);
             }
-            catch (CabanaLAException e)
-            {
-
-                throw new CabanaLAException(e.Message);
-            }
+            catch (CabanaContextException e) { throw new CabanaLAException(e.Message); }
+            catch (CabanaLAException e) { throw new CabanaLAException(e.Message); }
+            catch (MantenimientoContextException e) { throw new CabanaLAException(e.Message); }
+            catch (TipoContextException e) { throw new CabanaLAException(e.Message); }
+            catch (Exception e) { throw new CabanaLAException(e.Message); }
 
         }
 
