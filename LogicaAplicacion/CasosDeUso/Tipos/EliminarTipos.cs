@@ -2,6 +2,7 @@
 using LogicaAplicacion.CasosDeUso.Interfaces;
 using LogicaNegocio.Entidades;
 using LogicaNegocio.Excepciones.TipoExceptions;
+using LogicaAplicacion.Excepciones.TipoExcepciones;
 
 namespace LogicaAplicacion.CasosDeUso.Tipos
 {
@@ -20,10 +21,10 @@ namespace LogicaAplicacion.CasosDeUso.Tipos
             {
                 _repositorioTipo.Delete(nombre);
             }
-            catch (TipoDeleteException)
+            catch (TipoLAException)
             {
 
-                throw new TipoDeleteException ("No se ha podido eliminar este tipo de cabaña!");
+                throw new TipoLAException("No se ha podido eliminar este tipo de cabaña!");
             }
         }
 

@@ -25,9 +25,9 @@ namespace LogicaAplicacion.CasosDeUso.Mantenimientos
                     ToList();
                 return aux;
             }
-            catch (Exception e)
+            catch (MantenimientoLAException e)
             {
-                throw new MantenimientoSearchException (e.Message);
+                throw new MantenimientoLAException(e.Message);
             }
         }
 

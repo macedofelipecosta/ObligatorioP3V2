@@ -20,10 +20,10 @@ namespace LogicaAplicacion.CasosDeUso.Mantenimientos
                 
                 return _repositorioMantenimiento.GetAll();
             }
-            catch (MantenimientoSearchException)
+            catch (MantenimientoLAException)
             {
 
-                throw new MantenimientoSearchException("No se ha encontrado ningún mantenimiento!");
+                throw new MantenimientoLAException("No se ha encontrado ningún mantenimiento!");
             }
 
         }

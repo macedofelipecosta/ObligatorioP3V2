@@ -1,4 +1,5 @@
-﻿using LogicaNegocio.Entidades;
+﻿using LogicaConexion.Excepciones.CabanaExcepciones;
+using LogicaNegocio.Entidades;
 using LogicaNegocio.Excepciones.CabanaExcepciones;
 using LogicaNegocio.InterfaceRepositorio;
 using Microsoft.IdentityModel.Tokens;
@@ -29,9 +30,9 @@ namespace LogicaConexion.EntityFramework
                 int last = _hotelContext.Cabanas.OrderBy(x => x.NumeroHabitacion).LastOrDefault().NumeroHabitacion + 1;
                 return last;
             }
-            catch (Exception)
+            catch (CabanaContextException)
             {
-                throw new Exception("Ha ocurrido un error al encontrar ultimo id");
+                throw new CabanaContextException("Ha ocurrido un error al encontrar ultimo id");
             }
         }
 
@@ -45,9 +46,9 @@ namespace LogicaConexion.EntityFramework
                 _hotelContext.Cabanas.Add(obj);
                 _hotelContext.SaveChanges();
             }
-            catch (Exception e)
+            catch (CabanaContextException e)
             {
-                throw new Exception(e.Message);
+                throw new CabanaContextException(e.Message);
             }
 
         }
@@ -58,9 +59,9 @@ namespace LogicaConexion.EntityFramework
                 Cabana cabana = _hotelContext.Cabanas.Where(x => x.NumeroHabitacion == numeroHabitacion).FirstOrDefault();
                 return cabana;
             }
-            catch (Exception)
+            catch (CabanaContextException)
             {
-                throw new Exception("No se ha encontrado el número de habitación!");
+                throw new CabanaContextException("No se ha encontrado el número de habitación!");
             }
 
 
@@ -78,7 +79,7 @@ namespace LogicaConexion.EntityFramework
             var cabana = _hotelContext.Cabanas.FirstOrDefault(cabana => cabana.Nombre.Data == nombre);
             if (cabana == null)
             {
-                throw new Exception("No se ha encontrado el tipo de cabaña");
+                throw new CabanaContextException("No se ha encontrado el tipo de cabaña");
             }
             return cabana;
         }
@@ -115,11 +116,11 @@ namespace LogicaConexion.EntityFramework
             try
             {
                 var nombre = _hotelContext.Cabanas.Where(x => x.Nombre.Data == nombreP).ToList();
-                if (nombre.Count>0) { throw new CabanaNameException("El nombre de ingresado para esta cabaña ya existe en la base de datos!"); }
+                if (nombre.Count>0) { throw new CabanaContextException("El nombre de ingresado para esta cabaña ya existe en la base de datos!"); }
             }
-            catch (CabanaNameException e)
+            catch (CabanaContextException e)
             {
-                throw new CabanaNameException(e.Message);
+                throw new CabanaContextException(e.Message);
             }
         }
         private void NumeroHabitacionEnUso(int dato)
@@ -127,11 +128,11 @@ namespace LogicaConexion.EntityFramework
             try
             {
                 var numero = _hotelContext.Cabanas.Where(x => x.NumeroHabitacion == dato).ToList();
-                if (numero.Count>0) { throw new Exception("El numero de habitación ingresado ya existe!"); }
+                if (numero.Count>0) { throw new CabanaContextException("El numero de habitación ingresado ya existe!"); }
             }
-            catch (Exception e)
+            catch (CabanaContextException e)
             {
-                throw new Exception (e.Message);
+                throw new CabanaContextException(e.Message);
             }
         }
     }

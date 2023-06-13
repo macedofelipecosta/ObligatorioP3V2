@@ -19,9 +19,9 @@ namespace LogicaAplicacion.CasosDeUso.Mantenimientos
             {
                 return _repositorioMantenimiento.GetForCabanaId(numeroHabitacion);
             }
-            catch (Exception)
+            catch (MantenimientoLAException)
             {
-                throw new MantenimientoSearchException ("No se han encontrado mantenimientos para esta cabaña!");
+                throw new MantenimientoLAException("No se han encontrado mantenimientos para esta cabaña!");
             }
             
         }

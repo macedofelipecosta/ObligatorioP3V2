@@ -4,6 +4,8 @@ using LogicaNegocio.Entidades;
 using LogicaNegocio.Excepciones.UsuarioExceptions;
 using Microsoft.AspNetCore.Mvc;
 using WebApi.DTOs;
+using WebApi.Excepciones.TipoExcepciones;
+using WebApi.Excepciones.UsuarioException;
 using WebApi.JWT;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -49,11 +51,11 @@ namespace WebApi.Controllers
                 jwtPass = _jwt.GenerarTokenJWT(usuario.Email);
                 return Ok(jwtPass);
             }
-                return BadRequest(new UsuarioLoginException("Hubo un problema al iniciar sesión!"));
+                return BadRequest(new UsuarioControllerException("Hubo un problema al iniciar sesión!"));
             }
-            catch (UsuarioLoginException e)
+            catch (UsuarioControllerException e)
             {
-                return BadRequest(e.Message);
+                return StatusCode(500,e.Message);
             }
         }
 

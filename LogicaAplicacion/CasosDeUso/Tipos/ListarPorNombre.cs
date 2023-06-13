@@ -1,4 +1,5 @@
-﻿using LogicaConexion.EntityFramework;
+﻿using LogicaAplicacion.Excepciones.TipoExcepciones;
+using LogicaConexion.EntityFramework;
 using LogicaNegocio.Entidades;
 using LogicaNegocio.Excepciones.TipoExceptions;
 
@@ -19,10 +20,10 @@ namespace LogicaAplicacion.CasosDeUso.Tipos
             {
                 return _repositorioTipo.GetTipoByString(palabra);
             }
-            catch (Exception)
+            catch (TipoLAException)
             {
 
-                throw new TipoSearchException ($"No se han encontrado tipos de cabaña con el nombre: {palabra}");
+                throw new TipoLAException($"No se han encontrado tipos de cabaña con el nombre: {palabra}");
             }
          
         }

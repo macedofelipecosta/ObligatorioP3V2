@@ -1,4 +1,5 @@
 ﻿using LogicaAplicacion.CasosDeUso.Interfaces;
+using LogicaAplicacion.Excepciones.TipoExcepciones;
 using LogicaConexion.EntityFramework;
 using LogicaNegocio.Entidades;
 using LogicaNegocio.Excepciones.TipoExceptions;
@@ -22,10 +23,10 @@ namespace LogicaAplicacion.CasosDeUso.Tipos
                 _repositorioTipo.Add(obj);
              
             }
-            catch (Exception)
+            catch (TipoLAException)
             {
 
-                throw new TipoCreateException("No se ha podido crear el tipo de cabaña!");
+                throw new TipoLAException("No se ha podido crear el tipo de cabaña!");
             }
 
         }

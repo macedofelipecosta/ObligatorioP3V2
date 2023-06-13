@@ -23,17 +23,17 @@ namespace LogicaAplicacion.CasosDeUso.Mantenimientos
                 var aux = lista.Where(x => x.FechaMantenimiento.Date == fechaMantenimiento.Date).ToList();
                 if (aux.Count >= 3)
                 {
-                    throw new MantenimientoDateException("No se pueden realizar mas de 3 mantenimientos por día!");
+                    throw new MantenimientoLAException("No se pueden realizar mas de 3 mantenimientos por día!");
                 }
                 if (fechaMantenimiento.Date > DateTime.Today.Date)
                 {
-                    throw new MantenimientoDateException("La fecha debe ser anterior al día de hoy!");
+                    throw new MantenimientoLAException("La fecha debe ser anterior al día de hoy!");
                 }
             }
-            catch (MantenimientoDateException e)
+            catch (MantenimientoLAException e)
             {
 
-                throw new MantenimientoDateException(e.Message);
+                throw new MantenimientoLAException(e.Message);
             }
         }
 

@@ -1,4 +1,5 @@
-﻿using LogicaConexion.EntityFramework;
+﻿using LogicaAplicacion.Excepciones.TipoExcepciones;
+using LogicaConexion.EntityFramework;
 using LogicaNegocio.Entidades;
 using LogicaNegocio.Excepciones.TipoExcepciones;
 
@@ -17,10 +18,10 @@ namespace LogicaAplicacion.CasosDeUso.Tipos
             {
                 return _repositorioTipo.CostoPersona(obj.Nombre);
             }
-            catch (Exception)
+            catch (TipoLAException)
             {
 
-                throw new TipoCostException ("No se ha podido obtener el costo por persona!");
+                throw new TipoLAException("No se ha podido obtener el costo por persona!");
             }
 
         }

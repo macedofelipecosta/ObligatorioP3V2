@@ -1,4 +1,5 @@
 ﻿
+using LogicaAplicacion.Excepciones.CabanaExcepciones;
 using LogicaConexion.EntityFramework;
 using LogicaNegocio.Entidades;
 using LogicaNegocio.Excepciones.CabanaExceptions;
@@ -20,10 +21,10 @@ namespace LogicaAplicacion.CasosDeUso.Cabanas
             {
                 return _repositorioCabana.Get(nombre);
             }
-            catch (Exception e)
+            catch (CabanaLAException e)
             {
 
-                throw new CabanaSearchException(e.Message);
+                throw new CabanaLAException(e.Message);
             }
             
         }

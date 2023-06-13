@@ -1,4 +1,5 @@
-﻿using LogicaNegocio.Entidades;
+﻿using LogicaConexion.Excepciones.UsuarioExceptions;
+using LogicaNegocio.Entidades;
 using LogicaNegocio.InterfaceRepositorio;
 using System;
 using System.Collections.Generic;
@@ -32,13 +33,13 @@ namespace LogicaConexion.EntityFramework
         {
             if (string.IsNullOrEmpty(email))
             {
-                throw new Exception("No se ha recibido email");
+                throw new UsuarioContextException("No se ha recibido email");
             }
 
             var usuario = _hotelContext.Usuarios.FirstOrDefault(x => x.Email == email);
             if (usuario == null)
             {
-                throw new Exception("No se ha encontrado el email.");
+                throw new UsuarioContextException("No se ha encontrado el email.");
             }
             return usuario;
 
@@ -53,7 +54,7 @@ namespace LogicaConexion.EntityFramework
         {
             if (string.IsNullOrEmpty(email))
             {
-                throw new Exception("No se ha recibido un usuario.");
+                throw new UsuarioContextException("No se ha recibido un usuario.");
             }
             try
             {
@@ -61,10 +62,10 @@ namespace LogicaConexion.EntityFramework
                 _hotelContext.Usuarios.Update(usuario);
                 _hotelContext.SaveChanges();
             }
-            catch (Exception )
+            catch (UsuarioContextException)
             {
 
-                throw new Exception("Ha ocurrido un error al actualizar el usuario.");
+                throw new UsuarioContextException("Ha ocurrido un error al actualizar el usuario.");
             }
         }
     }

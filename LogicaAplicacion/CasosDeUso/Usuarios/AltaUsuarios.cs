@@ -1,4 +1,5 @@
-﻿using LogicaConexion.EntityFramework;
+﻿using LogicaAplicacion.Excepciones.UsuarioExceptions;
+using LogicaConexion.EntityFramework;
 using LogicaNegocio.Entidades;
 using LogicaNegocio.Excepciones.UsuarioExceptions;
 
@@ -21,10 +22,10 @@ namespace LogicaAplicacion.CasosDeUso.Usuarios
                 _repositorioUsuario.Add(obj);
              
             }
-            catch (Exception)
+            catch (UsuarioLAException)
             {
 
-                throw new UsuarioCreateException("No se ha podido crear el usuario!");
+                throw new UsuarioLAException("No se ha podido crear el usuario!");
             }
             
         }

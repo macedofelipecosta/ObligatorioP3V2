@@ -1,6 +1,7 @@
 ﻿using LogicaNegocio.Entidades;
 using LogicaConexion.EntityFramework;
 using LogicaNegocio.Excepciones.UsuarioExceptions;
+using LogicaAplicacion.Excepciones.UsuarioExceptions;
 
 namespace LogicaAplicacion.CasosDeUso.Usuarios
 {
@@ -15,10 +16,10 @@ namespace LogicaAplicacion.CasosDeUso.Usuarios
             {
                 _repositorioUsuario.Delete(obj.Email);
             }
-            catch (Exception)
+            catch (UsuarioLAException)
             {
 
-                throw new UsuarioDeleteException($"No se ha podido eliminar al usuario: {obj.Email}");
+                throw new UsuarioLAException($"No se ha podido eliminar al usuario: {obj.Email}");
             }
             
         }

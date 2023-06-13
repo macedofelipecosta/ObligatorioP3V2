@@ -1,6 +1,5 @@
 ﻿using LogicaAplicacion.CasosDeUso.Interfaces;
-
-
+using LogicaAplicacion.Excepciones.CabanaExcepciones;
 using LogicaConexion.EntityFramework;
 using LogicaNegocio.Entidades;
 using LogicaNegocio.Excepciones;
@@ -24,10 +23,10 @@ namespace LogicaAplicacion.CasosDeUso.Cabanas
             {
                 _repositorioCabana.Add(obj);
             }
-            catch (Exception e)
+            catch (CabanaLAException e)
             {
 
-                throw new CabanaCreateException (e.Message);
+                throw new CabanaLAException(e.Message);
             }
 
         }

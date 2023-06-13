@@ -1,13 +1,7 @@
-﻿using LogicaNegocio.Entidades;
-using LogicaNegocio.Excepciones.TipoExcepciones;
-using LogicaNegocio.Excepciones.TipoExceptions;
+﻿using LogicaConexion.Excepciones.TipoExcepciones;
+using LogicaNegocio.Entidades;
 using LogicaNegocio.InterfaceRepositorio;
 using LogicaNegocio.ValueObject;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LogicaConexion.EntityFramework
 {
@@ -36,10 +30,10 @@ namespace LogicaConexion.EntityFramework
                 _hotelContext.Tipos.Remove(tipo);
                 _hotelContext.SaveChanges();
             }
-            catch (TipoDeleteException e)
+            catch (TipoContextException e)
             {
 
-                throw new TipoDeleteException(e.Message);
+                throw new TipoContextException(e.Message);
             }
 
         }
@@ -49,12 +43,12 @@ namespace LogicaConexion.EntityFramework
 
             if (string.IsNullOrEmpty(nombre))
             {
-                throw new TipoNameException("No se ha recibido ninugún nombre de tipo de cabaña.");
+                throw new TipoContextException("No se ha recibido ninugún nombre de tipo de cabaña.");
             }
             var tipo = _hotelContext.Tipos.FirstOrDefault(tipo => tipo.Nombre == nombre);
             if (tipo == null)
             {
-                throw new TipoSearchException("No se ha encontrado el tipo de cabaña");
+                throw new TipoContextException("No se ha encontrado el tipo de cabaña");
             }
             return tipo;
         }
@@ -65,9 +59,9 @@ namespace LogicaConexion.EntityFramework
             {
                 return _hotelContext.Tipos.ToList();
             }
-            catch (TipoSearchException)
+            catch (TipoContextException)
             {
-                throw new TipoSearchException("No se han encontrado cabañas a mostrar");
+                throw new TipoContextException("No se han encontrado cabañas a mostrar");
             }
 
         }
@@ -99,9 +93,9 @@ namespace LogicaConexion.EntityFramework
                 _hotelContext.Tipos.Update(tipo);
                 _hotelContext.SaveChanges();
             }
-            catch (TipoUpdateException)
+            catch (TipoContextException)
             {
-                throw new TipoUpdateException($"Ha ocurrido un error al modificar el tipo ({nombre}) de cabaña!");
+                throw new TipoContextException($"Ha ocurrido un error al modificar el tipo ({nombre}) de cabaña!");
             }
         }
 
@@ -112,12 +106,12 @@ namespace LogicaConexion.EntityFramework
                 var list = _hotelContext.Cabanas.Where(x => x.NombreTipo.Data == nombre).ToList();
                 if (list.Count > 0)
                 {
-                    throw new TipoDeleteException($"No se puede eliminar el tipo {nombre}, existen cabañas con este tipo!");
+                    throw new TipoContextException($"No se puede eliminar el tipo {nombre}, existen cabañas con este tipo!");
                 }
             }
-            catch (TipoDeleteException e)
+            catch (TipoContextException e)
             {
-                throw new TipoDeleteException(e.Message);
+                throw new TipoContextException(e.Message);
             }
         }
     }

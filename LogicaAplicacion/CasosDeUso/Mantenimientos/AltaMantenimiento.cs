@@ -18,9 +18,9 @@ namespace LogicaAplicacion.CasosDeUso.Mantenimientos
             {
                 _repoMantenimiento.Add(obj);
             }
-            catch (MantenimientoCreateException)
+            catch (MantenimientoLAException)
             {
-                throw new MantenimientoCreateException ($"No se ha podido agregar este mantenimiento: {obj.Id}!");
+                throw new MantenimientoLAException($"No se ha podido agregar este mantenimiento: {obj.Id}!");
             }
 
 

@@ -7,6 +7,8 @@ using Microsoft.IdentityModel.Tokens;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using LogicaNegocio.Excepciones.CabanaExceptions;
+using WebApi.Excepciones.CabanaExcepciones;
+using WebApi.Excepciones.CabanaExceptions;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -71,13 +73,11 @@ namespace WebApi.Controllers
             {
                 List<CabanaDTO> list = _mapper.Map<List<CabanaDTO>>(_listarCabanasTodas.ListarTodos());
 
-                if (list.IsNullOrEmpty())
-                {
-                    return NotFound();
-                }
+                if (list.IsNullOrEmpty()) return NotFound("No se han encontrado cabañas registradas!");
+               
                 return Ok(list);
             }
-            catch (CabanaCreateException e)
+            catch (CabanaControllerException e)
             {
                 return StatusCode(500, e.Message);
             }
@@ -85,7 +85,7 @@ namespace WebApi.Controllers
 
         // GET api/v1/<CabanasController>/5
         /// <summary>
-        /// Retorna una cabaña dado su número de cabaña
+        /// Filtra y devuelve una cabaña por su numero de cabana
         /// </summary>
         /// <param name="id">Identificador de la cabaña</param>
         /// <returns>Devuelve la cabaña con ese número de autos, si no lo encuentra null</returns>
@@ -98,11 +98,12 @@ namespace WebApi.Controllers
             try
             {
                 CabanaDTO cabanaDto = _mapper.Map<CabanaDTO>(_buscarNumeroHabitacion.EncontrarNumHab(id));
+                if (cabanaDto == null) { return NotFound(); }
                 return Ok(cabanaDto);
             }
-            catch (CabanaSearchException e)
+            catch (CabanaControllerException e)
             {
-                return NotFound(e.Message);
+                return StatusCode(500,e.Message);
             }
 
         }
@@ -111,27 +112,27 @@ namespace WebApi.Controllers
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="obj"></param>
+        /// <param name="objDto"></param>
         /// <returns>Devuelve un mensaje de que la cabaña se ha creado con éxito</returns>
         [HttpPost("~/CrearCabana")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public ActionResult<Cabana> Post(CabanaDTO obj)
+        public ActionResult<Cabana> Post(CabanaDTO objDto)
         {
-            if (obj == null)
+            if (objDto == null)
             {
                 return BadRequest("Debe proporcionar una cabaña para dar de alta");
             }
             try
             {
-                Cabana cabana = _mapper.Map<Cabana>(obj);
+                Cabana cabana = _mapper.Map<Cabana>(objDto);
                 _altaCabanas.Create(cabana);
-                return Ok($"Se ha creado la cabaña {obj.Nombre} con éxito!");
+                return Created($"Se ha creado la cabaña {objDto.Nombre} con éxito!", objDto);
             }
-            catch (CabanaCreateException e)
+            catch (CabanaControllerException e)
             {
-                return BadRequest(e.Message);
+                return StatusCode(500, e.Message);
             }
         }
 
@@ -139,9 +140,9 @@ namespace WebApi.Controllers
         /// 
         /// </summary>
         /// <param name="Nombre"></param>
-        /// <returns></returns>
+        /// <returns>devuelve una lista de cabañas que fue filtrada por nombre o caracteres</returns>
         [HttpGet("~/BuscarNombre")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public IActionResult BuscarNombre(string Nombre)
@@ -153,19 +154,19 @@ namespace WebApi.Controllers
                     var resultado = _listaCabanaPorNombre.Lista_Filtrada_Nombre(Nombre);
                     if (resultado.IsNullOrEmpty())
                     {
-                        throw new CabanaSearchException($"No se ha encontrado la cabaña :{Nombre}! ");
+                        return NotFound($"No se ha encontrado la cabaña :{Nombre}! ");
                     }
                     List<CabanaDTO> list = _mapper.Map<List<CabanaDTO>>(resultado);
                     return Ok(list);
                 }
                 else
                 {
-                    throw new CabanaSearchException("No se ha recibido ningún nombre para buscar!");
+                    return BadRequest("No se ha recibido ningún nombre para buscar!");
                 }
             }
-            catch (CabanaSearchException e)
+            catch (CabanaControllerException e)
             {
-                return BadRequest(e.Message);
+                return StatusCode(500, e.Message);
             }
         }
 
@@ -173,9 +174,9 @@ namespace WebApi.Controllers
         /// 
         /// </summary>
         /// <param name="NombreTipo"></param>
-        /// <returns></returns>
+        /// <returns>Devuelve una lista de cabañas filtradas por su tipo</returns>
         [HttpGet("~/BuscarTipo")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public IActionResult BuscarTipo(string NombreTipo)
@@ -187,16 +188,16 @@ namespace WebApi.Controllers
                     var resultado = _listarCabanaPorTipo.Lista_Filtrada_Tipo(NombreTipo);
                     if (resultado.IsNullOrEmpty())
                     {
-                        throw new CabanaSearchException($"No se han encontrado cabañas del tipo:{NombreTipo}!");
+                        return NotFound($"No se han encontrado cabañas del tipo:{NombreTipo}!");
                     }
                     List<CabanaDTO> list = _mapper.Map<List<CabanaDTO>>(resultado);
                     return Ok(list);
                 }
-                else { throw new CabanaSearchException("No se ha recibido ningún tipo de cabaña para buscar!"); }
+                else { return BadRequest("No se ha recibido ningún tipo de cabaña para buscar!"); }
             }
-            catch (CabanaSearchException e)
+            catch (CabanaControllerException e)
             {
-                return BadRequest(e.Message);
+                return StatusCode(500, e.Message);
             }
         }
 
@@ -204,9 +205,9 @@ namespace WebApi.Controllers
         /// 
         /// </summary>
         /// <param name="NumeroPersonas"></param>
-        /// <returns></returns>
+        /// <returns>Devuelve una lista de cabañas filtradas por su capacidad de ocupantes</returns>
         [HttpGet("~/BuscarNumeroPersonas")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public IActionResult BuscarNumeroPersonas(int NumeroPersonas)
@@ -218,16 +219,16 @@ namespace WebApi.Controllers
                     var resultado = _listaPorNumeroPersonas.Lista_Filtrada_Numero_Personas(NumeroPersonas);
                     if (resultado.IsNullOrEmpty())
                     {
-                        throw new CabanaSearchException($"No se han encontrado cabañas con capacidad de {NumeroPersonas} personas!");
+                        return NotFound($"No se han encontrado cabañas con capacidad de {NumeroPersonas} personas!");
                     }
                     List<CabanaDTO> list = _mapper.Map<List<CabanaDTO>>(resultado);
                     return Ok(list);
                 }
-                else { throw new CabanaSearchException("No se ha recibido un numero de huespedes correcto!"); }
+                else { return BadRequest("No se ha recibido un numero de huespedes correcto!"); }
             }
-            catch (CabanaSearchException e)
+            catch (CabanaControllerException e)
             {
-                return BadRequest(e.Message);
+                return StatusCode(500, e.Message);
             }
         }
 
@@ -235,9 +236,9 @@ namespace WebApi.Controllers
         /// 
         /// </summary>
         /// <param name="HabilitadoAReservas"></param>
-        /// <returns></returns>
+        /// <returns>Devuelve una lista de cabañas filtrada por si estan habilitadas para alquilar o no</returns>
         [HttpGet("~/AlquilerHabilitado")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public IActionResult AlquilerHabilitado(bool HabilitadoAReservas)
@@ -247,14 +248,14 @@ namespace WebApi.Controllers
                 var resultado = _listaCabanaPorAlquiler.Lista_Filtrada_Alquiler(HabilitadoAReservas);
                 if (resultado.IsNullOrEmpty())
                 {
-                    throw new CabanaSearchException($"No se han encontrado cabañas con alquiler habilitado!");
+                    return NotFound($"No se han encontrado cabañas con alquiler habilitado!");
                 }
                 List<CabanaDTO> list = _mapper.Map<List<CabanaDTO>>(resultado);
                 return Ok( list);
             }
-            catch (CabanaSearchException e)
+            catch (CabanaControllerException e)
             {
-                return BadRequest(e.Message);
+                return StatusCode(500, e.Message);
             }
 
         }

@@ -1,4 +1,5 @@
-﻿using LogicaNegocio.Entidades;
+﻿using LogicaConexion.Excepciones.MantenimientoExceptions;
+using LogicaNegocio.Entidades;
 using LogicaNegocio.InterfaceRepositorio;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -21,10 +22,10 @@ namespace LogicaConexion.EntityFramework
                 _hotelContext.Mantenimientos.Add(obj);
                 _hotelContext.SaveChanges();
             }
-            catch (Exception)
+            catch (MantenimientoContextException)
             {
 
-                throw new Exception("No se ha podido guardar el mantenimiento!");
+                throw new MantenimientoContextException("No se ha podido guardar el mantenimiento!");
             }
 
         }

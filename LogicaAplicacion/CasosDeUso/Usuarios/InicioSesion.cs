@@ -1,4 +1,5 @@
-﻿using LogicaConexion.EntityFramework;
+﻿using LogicaAplicacion.Excepciones.UsuarioExceptions;
+using LogicaConexion.EntityFramework;
 using LogicaNegocio.Entidades;
 using LogicaNegocio.Excepciones.UsuarioExceptions;
 
@@ -17,7 +18,7 @@ namespace LogicaAplicacion.CasosDeUso.Usuarios
         {
             try
             {
-                if (obj == null) throw new UsuarioLoginException("No se ha podido iniciar sesión, compruebe que los campos no estén vacíos!");
+                if (obj == null) throw new UsuarioLAException("No se ha podido iniciar sesión, compruebe que los campos no estén vacíos!");
                 
                 var usuario = _repositorioUsuario.Get(obj.Email);
 
@@ -27,12 +28,12 @@ namespace LogicaAplicacion.CasosDeUso.Usuarios
                 {
                     return true;
                 }
-                else { throw new UsuarioLoginException("Usuario o contraseña incorrectos!"); }
+                else { throw new UsuarioLAException("Usuario o contraseña incorrectos!"); }
             }
-            catch (UsuarioLoginException e)
+            catch (UsuarioLAException e)
             {
 
-                throw new UsuarioLoginException(e.Message);
+                throw new UsuarioLAException(e.Message);
             }
 
 
