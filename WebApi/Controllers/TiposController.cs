@@ -116,7 +116,7 @@ namespace WebApi.Controllers
                 if (objDto == null) throw new TipoControllerException("No se ha recibido ningún tipo de cabaña para registrar! ");
                 Tipo tipo = _mapper.Map<Tipo>(objDto);
                 _altaTipo.Create(tipo);
-                return Created($"El tipo de cabaña {tipo.Nombre} ha sido creado correctamente", objDto);
+                return Created($"El tipo de cabana {tipo.Nombre} ha sido creado correctamente", objDto);
             }
             catch (CabanaLAException e) { return BadRequest(e.Message); }
             catch (TipoLAException e) { return BadRequest(e.Message); }

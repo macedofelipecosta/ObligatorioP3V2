@@ -60,7 +60,6 @@ namespace LogicaConexion.EntityFramework
             {
                 var mantenimientos = _hotelContext.Mantenimientos.Where(
                                 x => x.Cabana.NumeroHabitacion == numeroHabitacion).ToList();
-                if (mantenimientos.IsNullOrEmpty()) throw new MantenimientoContextException($"No se han encontrado mantenimientos para este número de habitación {numeroHabitacion}!");
                 return mantenimientos;
             }
             catch (MantenimientoContextException e) { throw new MantenimientoContextException(e.Message); }

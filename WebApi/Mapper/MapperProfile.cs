@@ -27,12 +27,12 @@ namespace WebApi.Mapper
 
 
             CreateMap<MantenimientoDTO, Mantenimiento>().
-                ForMember(mantenimiento => mantenimiento.Id, mantenimientoDTO => mantenimientoDTO.MapFrom(campo => campo.Id)).
+                //ForMember(mantenimiento => mantenimiento.Id, mantenimientoDTO => mantenimientoDTO.MapFrom(campo => campo.Id)).
                 ForMember(mantenimiento => mantenimiento.FechaMantenimiento, mantenimientoDTO => mantenimientoDTO.MapFrom(campo => campo.FechaMantenimiento)).
                 ForMember(mantenimiento => mantenimiento.Descripcion, mantenimientoDTO => mantenimientoDTO.MapFrom(campo => new Descripcion(campo.Descripcion))).
                 ForMember(mantenimiento => mantenimiento.Costo, mantenimientoDTO => mantenimientoDTO.MapFrom(campo => new Costo(campo.Costo))).
-                ForMember(mantenimiento => mantenimiento.Operador, mantenimientoDTO => mantenimientoDTO.MapFrom(campo => new Operador(campo.Operador))).
-                ForMember(mantenimiento => mantenimiento.Cabana, mantenimientoDTO => mantenimientoDTO.MapFrom(campo => campo.CabanaId));
+                ForMember(mantenimiento => mantenimiento.Operador, mantenimientoDTO => mantenimientoDTO.MapFrom(campo => new Operador(campo.Operador)));
+                //ForMember(mantenimiento => mantenimiento.Cabana, mantenimientoDTO => mantenimientoDTO.MapFrom(campo => campo.CabanaId));
 
             CreateMap<TipoDTO, Tipo>().
                 ForMember(tipo => tipo.Nombre, tipoDTO => tipoDTO.MapFrom(campo => campo.Nombre)).
@@ -53,7 +53,7 @@ namespace WebApi.Mapper
                 ForMember(cabanaDTO => cabanaDTO.CapacidadHabitacion, cabana => cabana.MapFrom(campo => campo.CapacidadHabitacion.Data));
 
             CreateMap<Mantenimiento, MantenimientoDTO>().
-                ForMember(mantenimientoDTO => mantenimientoDTO.Id, mantenimiento => mantenimiento.MapFrom(campo => campo.Id)).
+                //ForMember(mantenimientoDTO => mantenimientoDTO.Id, mantenimiento => mantenimiento.MapFrom(campo => campo.Id)).
                 ForMember(mantenimientoDTO => mantenimientoDTO.FechaMantenimiento, mantenimiento => mantenimiento.MapFrom(campo => campo.FechaMantenimiento)).
                 ForMember(mantenimientoDTO => mantenimientoDTO.Descripcion, mantenimiento => mantenimiento.MapFrom(campo => campo.Descripcion.Data)).
                 ForMember(mantenimientoDTO => mantenimientoDTO.Costo, mantenimiento => mantenimiento.MapFrom(campo => campo.Costo.Data)).

@@ -13,7 +13,7 @@ namespace WebApi.DTOs
         /// <summary>
         /// 
         /// </summary>
-        public int Id { get; set; }
+        //public int Id { get; set; }
         /// <summary>
         /// 
         /// </summary>

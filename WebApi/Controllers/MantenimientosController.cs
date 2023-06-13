@@ -6,9 +6,7 @@ using LogicaNegocio.Entidades;
 using LogicaNegocio.Excepciones.MantenimientoExceptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
-using System.Reflection.Metadata.Ecma335;
 using WebApi.DTOs;
-using WebApi.Excepciones.CabanaExcepciones;
 using WebApi.Excepciones.MantenimientoExceptions;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -58,7 +56,7 @@ namespace WebApi.Controllers
             {
                 List<MantenimientoDTO> list = _mapper.Map<List<MantenimientoDTO>>(_getAll.Listar_todos());
 
-                if (list.IsNullOrEmpty()) return NotFound($"No se han encontrado mantenimientos!");
+                if (list.IsNullOrEmpty())throw new MantenimientoSearchException($"No se han encontrado mantenimientos!");
                 return Ok(list);
             }
             catch (CabanaLAException e) { return BadRequest(e.Message); }
@@ -152,10 +150,13 @@ namespace WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public ActionResult Post(MantenimientoDTO objDto, int cabanaId)
         {
-            if (objDto == null) return BadRequest("Debe proporcionar un mantenimiento para ser dado de alta!");
+            
             try
             {
+                if (objDto == null) throw new MantenimientoControllerException("Debe proporcionar un mantenimiento para ser dado de alta!");
+                objDto.CabanaId=cabanaId;
                 Mantenimiento mantenimiento = _mapper.Map<Mantenimiento>(objDto);
+                
                 Cabana cabana = _buscarCabana.EncontrarNumHab(cabanaId);
                 if (cabana == null) throw new MantenimientoSearchException("No se han encontrado cabañas con ese numero de habitación!");
 
@@ -163,7 +164,7 @@ namespace WebApi.Controllers
                 mantenimiento.Cabana = cabana;
 
                 _altaMantenimiento.NuevoMantenimiento(mantenimiento);
-                return Created($"Se ha añadido el mantenimiento a la cabaña {cabana.Nombre.Data}", objDto);
+                return Created($"Se ha anadido el mantenimiento a la cabana {cabana.Nombre.Data}", objDto);
             }
             catch (CabanaLAException e) { return BadRequest(e.Message); }
             catch (MantenimientoLAException e) { return BadRequest(e.Message); }

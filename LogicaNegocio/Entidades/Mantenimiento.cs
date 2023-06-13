@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using LogicaNegocio.Excepciones.MantenimientoExceptions;
 using LogicaNegocio.InterfaceDominio;
 using LogicaNegocio.ValueObject;
 
@@ -34,13 +35,14 @@ namespace LogicaNegocio.Entidades
             {
                 if (this.FechaMantenimiento.Date > DateTime.Today.Date)
                 {
-                    throw new Exception("La fecha no puede ser futura!");
+                    throw new MantenimientoDateException("La fecha no puede ser futura!");
                 }
             }
-            catch (Exception e)
+            catch (MantenimientoDateException e)
             {
                 throw e;
             }
+            catch(Exception e) { throw new MantenimientoDateException(e.Message); }
         }
 
     }

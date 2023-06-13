@@ -1,6 +1,6 @@
 ﻿using LogicaNegocio.Entidades;
 using LogicaConexion.EntityFramework;
-using LogicaNegocio.Excepciones.UsuarioExceptions;
+
 using LogicaAplicacion.Excepciones.UsuarioExceptions;
 using LogicaConexion.Excepciones.UsuarioExceptions;
 

@@ -64,8 +64,6 @@ namespace WebApi.Controllers
                     // Agrega el token JWT al cuerpo de la respuesta
                     response.Content = new StringContent(jwtToken);
                     response.Headers.Add("Authorization", jwtToken);
-
-
                     return response;
 
                 }
@@ -76,7 +74,7 @@ namespace WebApi.Controllers
             {
                 // Si las credenciales son inválidas, devuelve una respuesta HTTP Unauthorized
                 HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.Unauthorized);
-                response.Content = new StringContent(e.Message);
+                response.Content = new StringContent("Usuario o contraseña inválidos!");
                 response.Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("text/plain");
 
                 return response;

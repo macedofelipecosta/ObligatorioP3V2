@@ -6,7 +6,8 @@ using Microsoft.IdentityModel.Tokens;
 using AutoMapper;
 using WebApi.Excepciones.CabanaExcepciones;
 using LogicaAplicacion.Excepciones.CabanaExcepciones;
-using LogicaNegocio.Excepciones.CabanaExceptions;
+
+using WebApi.Excepciones.CabanaExceptions;
 
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -126,7 +127,7 @@ namespace WebApi.Controllers
                 if (objDto == null) throw new CabanaControllerException("Debe proporcionar una cabaña para dar de alta");
                 Cabana cabana = _mapper.Map<Cabana>(objDto);
                 _altaCabanas.Create(cabana);
-                return Created($"Se ha creado la cabaña {objDto.Nombre} con éxito!", objDto);
+                return Created($"Se ha creado la cabana {objDto.Nombre} con exito!", objDto);
             }
             catch (CabanaLAException e) { return BadRequest(e.Message); }
             catch (CabanaSearchException e) { return NotFound(e.Message); }
