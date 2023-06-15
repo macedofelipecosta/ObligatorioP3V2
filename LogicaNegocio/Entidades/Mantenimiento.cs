@@ -18,6 +18,7 @@ namespace LogicaNegocio.Entidades
         public Descripcion Descripcion { get; set; }
         public Costo Costo { get; set; }
         public Operador Operador { get; set; }
+        public int CabanaId { get; set; }
         public Cabana Cabana { get; set; }
 
         public void Validate()

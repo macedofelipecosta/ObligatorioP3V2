@@ -1,4 +1,5 @@
-﻿using LogicaConexion.EntityFramework;
+﻿using LogicaAplicacion.CasosDeUso.Cabanas;
+using LogicaConexion.EntityFramework;
 using LogicaConexion.Excepciones.MantenimientoExceptions;
 using LogicaNegocio.Entidades;
 using LogicaNegocio.Excepciones.MantenimientoExceptions;
@@ -15,11 +16,14 @@ namespace LogicaAplicacion.CasosDeUso.Mantenimientos
     {
         private RepositorioMantenimiento _repo;
         private GetAll _getAll;
+        private BuscarNumeroHabitacion _numHab;
 
-        public MantenimientoEntreCostos(RepositorioMantenimiento repo, GetAll getAll)
+        public MantenimientoEntreCostos(RepositorioMantenimiento repo, GetAll getAll, BuscarNumeroHabitacion numHab)
         {
+
             _repo = repo;
             _getAll = getAll;
+            _numHab = numHab;
         }
 
         public IEnumerable<Mantenimiento> EntreCostos(int valor1, int valor2)
@@ -27,6 +31,7 @@ namespace LogicaAplicacion.CasosDeUso.Mantenimientos
             try
             {
                 var list = _getAll.Listar_todos();
+                foreach (var item in list) { item.Cabana = _numHab.EncontrarNumHab(item.CabanaId); }
                 var aux = list.Where(x=>x.Cabana.CapacidadHabitacion.Data>=valor1 && x.Cabana.CapacidadHabitacion.Data <= valor2).ToList();
 
                 return aux;

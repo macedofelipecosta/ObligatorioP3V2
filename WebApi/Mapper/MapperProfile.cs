@@ -31,8 +31,8 @@ namespace WebApi.Mapper
                 ForMember(mantenimiento => mantenimiento.FechaMantenimiento, mantenimientoDTO => mantenimientoDTO.MapFrom(campo => campo.FechaMantenimiento)).
                 ForMember(mantenimiento => mantenimiento.Descripcion, mantenimientoDTO => mantenimientoDTO.MapFrom(campo => new Descripcion(campo.Descripcion))).
                 ForMember(mantenimiento => mantenimiento.Costo, mantenimientoDTO => mantenimientoDTO.MapFrom(campo => new Costo(campo.Costo))).
-                ForMember(mantenimiento => mantenimiento.Operador, mantenimientoDTO => mantenimientoDTO.MapFrom(campo => new Operador(campo.Operador)));
-                //ForMember(mantenimiento => mantenimiento.Cabana, mantenimientoDTO => mantenimientoDTO.MapFrom(campo => campo.CabanaId));
+                ForMember(mantenimiento => mantenimiento.Operador, mantenimientoDTO => mantenimientoDTO.MapFrom(campo => new Operador(campo.Operador))).
+                ForMember(mantenimiento => mantenimiento.CabanaId, mantenimientoDTO => mantenimientoDTO.MapFrom(campo => campo.CabanaId));
 
             CreateMap<TipoDTO, Tipo>().
                 ForMember(tipo => tipo.Nombre, tipoDTO => tipoDTO.MapFrom(campo => campo.Nombre)).
@@ -58,7 +58,7 @@ namespace WebApi.Mapper
                 ForMember(mantenimientoDTO => mantenimientoDTO.Descripcion, mantenimiento => mantenimiento.MapFrom(campo => campo.Descripcion.Data)).
                 ForMember(mantenimientoDTO => mantenimientoDTO.Costo, mantenimiento => mantenimiento.MapFrom(campo => campo.Costo.Data)).
                 ForMember(mantenimientoDTO => mantenimientoDTO.Operador, mantenimiento => mantenimiento.MapFrom(campo => campo.Operador.Data)).
-                ForMember(mantenimientoDTO => mantenimientoDTO.CabanaId, mantenimiento => mantenimiento.MapFrom(campo => campo.Cabana.NumeroHabitacion));
+                ForMember(mantenimientoDTO => mantenimientoDTO.CabanaId, mantenimiento => mantenimiento.MapFrom(campo => campo.CabanaId));
 
             CreateMap<Tipo, TipoDTO>().
                 ForMember(tipoDTO => tipoDTO.Nombre, tipo => tipo.MapFrom(campo => campo.Nombre)).

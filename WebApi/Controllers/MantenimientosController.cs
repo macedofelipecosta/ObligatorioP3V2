@@ -204,7 +204,7 @@ namespace WebApi.Controllers
                 if (cabana == null) throw new MantenimientoSearchException("No se han encontrado cabañas con ese numero de habitación!");
 
                 _verificar.VerificarMantenimientos(objDto.CabanaId, objDto.FechaMantenimiento);
-                mantenimiento.Cabana = cabana;
+                //mantenimiento.Cabana = cabana;
 
                 _altaMantenimiento.NuevoMantenimiento(mantenimiento);
                 return Created($"Se ha anadido el mantenimiento a la cabana {cabana.Nombre.Data}", objDto);

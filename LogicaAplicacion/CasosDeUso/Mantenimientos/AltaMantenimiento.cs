@@ -1,4 +1,5 @@
-﻿using LogicaAplicacion.Excepciones.CabanaExcepciones;
+﻿using LogicaAplicacion.CasosDeUso.Cabanas;
+using LogicaAplicacion.Excepciones.CabanaExcepciones;
 using LogicaConexion.EntityFramework;
 using LogicaConexion.Excepciones.CabanaExcepciones;
 using LogicaConexion.Excepciones.MantenimientoExceptions;
@@ -11,15 +12,19 @@ namespace LogicaAplicacion.CasosDeUso.Mantenimientos
     public class AltaMantenimiento
     {
         private RepositorioMantenimiento _repoMantenimiento;
-        public AltaMantenimiento(RepositorioMantenimiento repoMantenimiento)
+        private BuscarNumeroHabitacion _repoCabana;
+        public AltaMantenimiento(RepositorioMantenimiento repoMantenimiento, BuscarNumeroHabitacion repoCabana)
         {
             _repoMantenimiento = repoMantenimiento;
+            _repoCabana = repoCabana;
         }
 
         public void NuevoMantenimiento(Mantenimiento obj)
         {
             try
             {
+                var cabana=_repoCabana.EncontrarNumHab(obj.CabanaId);
+                obj.Cabana = cabana;
                 _repoMantenimiento.Add(obj);
             }
             catch (CabanaContextException e) { throw new MantenimientoLAException(e.Message); }
