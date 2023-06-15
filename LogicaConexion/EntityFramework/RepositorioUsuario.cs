@@ -1,6 +1,7 @@
 ﻿using LogicaConexion.Excepciones.TipoExcepciones;
 using LogicaConexion.Excepciones.UsuarioExceptions;
 using LogicaNegocio.Entidades;
+using LogicaNegocio.Excepciones.UsuarioException;
 using LogicaNegocio.InterfaceRepositorio;
 using Microsoft.IdentityModel.Tokens;
 
@@ -15,9 +16,12 @@ namespace LogicaConexion.EntityFramework
         {
             try
             {
+                obj.Validate();
                 _hotelContext.Usuarios.Add(obj);
                 _hotelContext.SaveChanges();
             }
+            catch (UsuarioPassWordException e) { throw new UsuarioContextException(e.Message); }
+            catch (UsuarioEmailException e) { throw new UsuarioContextException(e.Message); }
             catch (UsuarioContextException e) { throw new UsuarioContextException(e.Message); }
             catch (Exception) { throw new UsuarioContextException("Ha ocurrido un error inesperado!"); }
 

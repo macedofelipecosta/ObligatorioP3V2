@@ -44,7 +44,7 @@ namespace WebApi.Mapper
                 ForMember(usuario => usuario.PassWord, usuarioDTO => usuarioDTO.MapFrom(campo => new Password(campo.Password)));
 
             CreateMap<Cabana, CabanaDTO>().
-                //ForMember(cabanaDTO => cabanaDTO.NumeroHabitacion, cabana => cabana.MapFrom(campo => campo.NumeroHabitacion)).
+                ForMember(cabanaDTO => cabanaDTO.NumeroHabitacion, cabana => cabana.MapFrom(campo => campo.NumeroHabitacion)).
                 ForMember(cabanaDTO => cabanaDTO.Nombre, cabana => cabana.MapFrom(campo => campo.Nombre.Data)).
                 ForMember(cabanaDTO => cabanaDTO.Descripcion, cabana => cabana.MapFrom(campo => campo.Descripcion.Data)).
                 ForMember(cabanaDTO => cabanaDTO.NombreTipo, cabana => cabana.MapFrom(campo => campo.NombreTipo.Data)).

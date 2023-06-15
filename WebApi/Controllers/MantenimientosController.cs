@@ -4,8 +4,12 @@ using LogicaAplicacion.CasosDeUso.Mantenimientos;
 using LogicaAplicacion.Excepciones.CabanaExcepciones;
 using LogicaNegocio.Entidades;
 using LogicaNegocio.Excepciones.MantenimientoExceptions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.VisualBasic;
+using System.Globalization;
+using System.Runtime.Serialization;
 using WebApi.DTOs;
 using WebApi.Excepciones.MantenimientoExceptions;
 
@@ -13,6 +17,7 @@ using WebApi.Excepciones.MantenimientoExceptions;
 
 namespace WebApi.Controllers
 {
+    [Authorize]
     [Route("api/v1/Mantenimientos")]
     [ApiController]
     public class MantenimientosController : ControllerBase
@@ -24,9 +29,11 @@ namespace WebApi.Controllers
         private GetBetweenDates _getBetweenDates;
         private MantenimientoCabanaId _mantCabanaId;
         private VerificarMantenimiento _verificar;
+        private MantenimientoEntreCostos _entreCostos;
 
         public MantenimientosController(IMapper mapper, AltaMantenimiento altaMantenimiento, BuscarNumeroHabitacion buscarCabana,
-                                        GetAll getAll, GetBetweenDates getBetweenDates, MantenimientoCabanaId mantCabanaId,VerificarMantenimiento verificar )
+                                        GetAll getAll, GetBetweenDates getBetweenDates, MantenimientoCabanaId mantCabanaId, VerificarMantenimiento verificar
+                                        , MantenimientoEntreCostos entreCostos)
         {
             _mapper = mapper;
             _altaMantenimiento = altaMantenimiento;
@@ -35,7 +42,7 @@ namespace WebApi.Controllers
             _getBetweenDates = getBetweenDates;
             _mantCabanaId = mantCabanaId;
             _verificar = verificar;
-            
+            _entreCostos = entreCostos;
         }
 
 
@@ -56,7 +63,7 @@ namespace WebApi.Controllers
             {
                 List<MantenimientoDTO> list = _mapper.Map<List<MantenimientoDTO>>(_getAll.Listar_todos());
 
-                if (list.IsNullOrEmpty())throw new MantenimientoSearchException($"No se han encontrado mantenimientos!");
+                if (list.IsNullOrEmpty()) throw new MantenimientoSearchException($"No se han encontrado mantenimientos!");
                 return Ok(list);
             }
             catch (CabanaLAException e) { return BadRequest(e.Message); }
@@ -111,22 +118,25 @@ namespace WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public ActionResult MantenimientoEntreFechas(DateTime fecha1, DateTime fecha2, int numeroHabitacion)
+        public ActionResult MantenimientoEntreFechas(string fecha1, string fecha2, int NumeroHabitacion)
         {
             try
             {
-                if (fecha1> fecha2)
+                DateTime f1 = DateTime.Parse(fecha1);
+                DateTime f2 = DateTime.Parse(fecha2);
+                if (f1 > f2)
                 {
                     throw new MantenimientoControllerException("La primer fecha no puede ser mayor a la segunda fecha!");
                 }
-                var list = _mantCabanaId.MantenimientoXidCabana(numeroHabitacion).OrderByDescending(x => x.Costo);
-                var aux = _getBetweenDates.MantenimientoPorFechas(fecha1, fecha2, numeroHabitacion);
+
+                var aux = _getBetweenDates.MantenimientoPorFechas(f1, f2, NumeroHabitacion);
                 if (aux.IsNullOrEmpty())
                 {
-                    throw new MantenimientoSearchException($"No se han encontrado mantenimientos entre las fechas {fecha1.ToShortDateString} " +
-                        $"- {fecha2.ToShortDateString} y la habitación número {numeroHabitacion}");
+                    throw new MantenimientoSearchException($"No se han encontrado mantenimientos entre las fechas {f1.ToShortDateString()} " +
+                        $"- {f2.ToShortDateString} y la habitación número {NumeroHabitacion}");
                 }
-                return Ok(aux);
+                List<MantenimientoDTO> list = _mapper.Map<List<MantenimientoDTO>>(aux);
+                return Ok(list);
             }
             catch (CabanaLAException e) { return BadRequest(e.Message); }
             catch (MantenimientoLAException e) { return BadRequest(e.Message); }
@@ -135,6 +145,39 @@ namespace WebApi.Controllers
             catch (Exception e) { return BadRequest(e.Message); }
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="valor1"></param>
+        /// <param name="valor2"></param>
+        /// <returns>devuelve los mantenimientos entre los costos proporcionados, agrupados por nombre operador
+        /// y la suma de los costos de sus mantenimientos</returns>
+        [HttpGet("~/Mantenimientos/EntreCostos")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public ActionResult MantenimientoPorCostos(int valor1, int valor2)
+        {
+            try
+            {
+                var aux = _entreCostos.EntreCostos(valor1, valor2);
+                List<MantenimientoDTO> list = _mapper.Map<List<MantenimientoDTO>>(aux);
+                var aux2 = list.GroupBy(M => M.Operador)
+                                .Select(group => new
+                                {
+                                    Operador = group.Key,
+                                    Costo = group.Sum(M => M.Costo)
+                                })
+                                .ToList();
+                if (aux2.Count == 0) throw new MantenimientoControllerException("No se han encontrado mantenimientos");
+                return Ok(aux2);
+            }
+            catch (MantenimientoControllerException e) { return NotFound(e.Message); }
+            catch (CabanaLAException e) { return BadRequest(e.Message); }
+            catch (Exception) { return BadRequest("Hubo un error inesperado"); }
+        }
 
         // POST api/<MantenimientosController>
         /// <summary>
@@ -148,19 +191,19 @@ namespace WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public ActionResult Post(MantenimientoDTO objDto, int cabanaId)
+        public ActionResult Post(MantenimientoDTO objDto)
         {
-            
+
             try
             {
                 if (objDto == null) throw new MantenimientoControllerException("Debe proporcionar un mantenimiento para ser dado de alta!");
-                objDto.CabanaId=cabanaId;
+
                 Mantenimiento mantenimiento = _mapper.Map<Mantenimiento>(objDto);
-                
-                Cabana cabana = _buscarCabana.EncontrarNumHab(cabanaId);
+
+                Cabana cabana = _buscarCabana.EncontrarNumHab(objDto.CabanaId);
                 if (cabana == null) throw new MantenimientoSearchException("No se han encontrado cabañas con ese numero de habitación!");
 
-                _verificar.VerificarMantenimientos(cabanaId, objDto.FechaMantenimiento);
+                _verificar.VerificarMantenimientos(objDto.CabanaId, objDto.FechaMantenimiento);
                 mantenimiento.Cabana = cabana;
 
                 _altaMantenimiento.NuevoMantenimiento(mantenimiento);
@@ -174,8 +217,8 @@ namespace WebApi.Controllers
 
         }
 
-    
-       
+
+
 
 
     }

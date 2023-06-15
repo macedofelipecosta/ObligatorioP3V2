@@ -19,6 +19,7 @@ namespace LogicaConexion.EntityFramework
         {
             try
             {
+                obj.Validate();
                 _hotelContext.Mantenimientos.Add(obj);
                 _hotelContext.SaveChanges();
             }

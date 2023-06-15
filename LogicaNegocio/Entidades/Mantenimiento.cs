@@ -25,9 +25,12 @@ namespace LogicaNegocio.Entidades
             ValidarFecha();
         }
 
-        public Mantenimiento() { }
+        public Mantenimiento()
+        {
+            
+        }
 
-        
+
 
         private void ValidarFecha()
         {
@@ -42,7 +45,7 @@ namespace LogicaNegocio.Entidades
             {
                 throw e;
             }
-            catch(Exception e) { throw new MantenimientoDateException(e.Message); }
+            catch (Exception) { throw new MantenimientoDateException("Ha ocurrido un error inesperado!"); }
         }
 
     }

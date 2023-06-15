@@ -1,4 +1,5 @@
-﻿using LogicaAplicacion.Excepciones.UsuarioExceptions;
+﻿using LogicaAplicacion.CasosDeUso.Interfaces;
+using LogicaAplicacion.Excepciones.UsuarioExceptions;
 using LogicaConexion.EntityFramework;
 using LogicaConexion.Excepciones.UsuarioExceptions;
 using LogicaNegocio.Entidades;
@@ -6,7 +7,7 @@ using LogicaNegocio.Entidades;
 
 namespace LogicaAplicacion.CasosDeUso.Usuarios
 {
-    public class AltaUsuarios
+    public class AltaUsuarios:IAlta<Usuario>
     {
         private RepositorioUsuario _repositorioUsuario;
 
@@ -14,10 +15,8 @@ namespace LogicaAplicacion.CasosDeUso.Usuarios
         {
             _repositorioUsuario = repositorioUsuario;
         }
-
-        public void CrearUsuario(Usuario obj)
+        public void Create(Usuario obj)
         {
-
             try
             {
                 _repositorioUsuario.Add(obj);
@@ -25,12 +24,6 @@ namespace LogicaAplicacion.CasosDeUso.Usuarios
             }
             catch (UsuarioContextException e) { throw new UsuarioLAException(e.Message); }
             catch (Exception e) { throw new UsuarioLAException(e.Message); };
-            
         }
-
-
-
-
-
     }
 }

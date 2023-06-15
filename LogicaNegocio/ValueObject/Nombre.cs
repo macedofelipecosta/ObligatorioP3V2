@@ -1,4 +1,5 @@
 ﻿using LogicaNegocio.Excepciones.TipoExcepciones;
+using LogicaNegocio.Excepciones.VOExceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,17 +21,26 @@ namespace LogicaNegocio.ValueObject
         }
         public void ValidateText(string data)
         {
-            Regex regex = new Regex(@"^[A-Za-zñÑ0-9- ' ]+\s*[A-Za-zñÑ0-9 ' \s-]*[A-Za-zñÑ0-9- ']+$");
-            
-            if (string.IsNullOrEmpty(data))
+            try
             {
-                throw new TipoNameException("No se ha recibido un nombre!");
+                Regex regex = new Regex(@"^[A-Za-zñÑ0-9- ' ]+\s*[A-Za-zñÑ0-9 ' \s-]*[A-Za-zñÑ0-9- ']+$");
+
+                if (string.IsNullOrEmpty(data))
+                {
+                    throw new VONombreException("No se ha recibido un nombre!");
+                }
+
+                if (!regex.IsMatch(data))
+                {
+                    throw new VONombreException("No se ha podido validar el nombre!");
+                }
+            }
+            catch (VONombreException e)
+            {
+
+                throw new VONombreException(e.Message);
             }
 
-            if (!regex.IsMatch(data))
-            {
-                throw new TipoNameException("No se ha podido validar el nombre!");
-            }
         }
     }
 }

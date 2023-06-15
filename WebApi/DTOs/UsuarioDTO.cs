@@ -22,6 +22,6 @@ namespace WebApi.DTOs
         ///
         ///</summary>
         ///
-        //public string Token { get; set; }
+        
     }
 }

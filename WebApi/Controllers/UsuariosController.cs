@@ -10,6 +10,10 @@ using System.Web;
 using WebApi.DTOs;
 using WebApi.Excepciones.UsuarioException;
 using WebApi.JWT;
+using Microsoft.AspNetCore.Authorization;
+using LogicaAplicacion.CasosDeUso.Cabanas;
+using WebApi.Excepciones.CabanaExcepciones;
+using LogicaConexion.Excepciones.UsuarioExceptions;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -17,6 +21,7 @@ namespace WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+
     public class UsuariosController : ControllerBase
     {
         private AltaUsuarios _altaUsuario;
@@ -36,7 +41,7 @@ namespace WebApi.Controllers
 
 
 
-        // GET: api/<UsuariosController>
+        // POST: api/<UsuariosController>
         /// <summary>
         /// 
         /// </summary>
@@ -101,6 +106,35 @@ namespace WebApi.Controllers
 
 
         }
+
+        ///POST: api/<UsuariosController>
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="objDto"></param>
+        /// <returns></returns>
+        [HttpPost("~/Usuarios/Create")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public ActionResult<Usuario> Post(UsuarioDTO objDto)
+        {
+            try
+            {
+                if (objDto == null) throw new UsuarioControllerException("Debe proporcionar un usuario para dar de alta");
+                Usuario usuario = _mapper.Map<Usuario>(objDto);
+                _altaUsuario.Create(usuario);
+
+                return Created($"Se ha creado correctamente el usuario {objDto.Email}", objDto);
+            }
+            catch (UsuarioControllerException e) { return BadRequest(e.Message); }
+            catch (UsuarioLAException e) { return BadRequest(e.Message); }
+            catch (Exception e) {return BadRequest(e.Message); }
+
+        }
+
+
 
     }
 }

@@ -1,4 +1,5 @@
 ﻿using LogicaNegocio.Excepciones.CabanaExcepciones;
+using LogicaNegocio.Excepciones.VOExceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,12 +24,12 @@ namespace LogicaNegocio.ValueObject
             {
                 if (data <= 0)
                 {
-                    throw new CabanaHabCapacityException("La capacidad de la habitación debe ser mayor a 0 !");
+                    throw new VOHabCapacityException("La capacidad de la habitación debe ser mayor a 0 !");
                 }
             }
-            catch (Exception e)
+            catch (VOHabCapacityException e)
             {
-                throw new Exception(e.Message);
+                throw new VOHabCapacityException(e.Message);
             }
         }
     }

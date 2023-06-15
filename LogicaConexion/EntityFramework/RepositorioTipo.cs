@@ -1,6 +1,7 @@
 ﻿using LogicaConexion.Excepciones.MantenimientoExceptions;
 using LogicaConexion.Excepciones.TipoExcepciones;
 using LogicaNegocio.Entidades;
+using LogicaNegocio.Excepciones.TipoExcepciones;
 using LogicaNegocio.InterfaceRepositorio;
 using LogicaNegocio.ValueObject;
 using Microsoft.IdentityModel.Tokens;
@@ -20,9 +21,11 @@ namespace LogicaConexion.EntityFramework
         {
             try
             {
+                obj.Validate();
                 _hotelContext.Tipos.Add(obj);
                 _hotelContext.SaveChanges();
             }
+            catch (TipoNameException e) { throw new TipoContextException(e.Message); }
             catch (TipoContextException e) { throw new TipoContextException(e.Message); }
             catch (Exception) { throw new TipoContextException("Ha ocurrido un error inesperado!"); }
 

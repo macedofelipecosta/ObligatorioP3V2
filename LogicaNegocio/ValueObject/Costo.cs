@@ -1,4 +1,5 @@
 ﻿using LogicaNegocio.Excepciones.MantenimientoExceptions;
+using LogicaNegocio.Excepciones.VOExceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,12 +25,12 @@ namespace LogicaNegocio.ValueObject
             {
                 if (data < 0)
                 {
-                    throw new MantenimientoCostException("El costo no puede ser menor a cero!");
+                    throw new VOCostoException("El costo no puede ser menor a cero!");
                 }
             }
-            catch (MantenimientoCostException e)
+            catch (VOCostoException e)
             {
-                throw e;
+                throw new VOCostoException(e.Message);
             }
 
         }

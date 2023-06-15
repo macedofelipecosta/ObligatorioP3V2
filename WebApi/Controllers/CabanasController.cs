@@ -8,15 +8,17 @@ using WebApi.Excepciones.CabanaExcepciones;
 using LogicaAplicacion.Excepciones.CabanaExcepciones;
 
 using WebApi.Excepciones.CabanaExceptions;
+using Microsoft.AspNetCore.Authorization;
 
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace WebApi.Controllers
 {
+    [Authorize]
     [Route("api/v1/Cabanas")]
     [ApiController]
-    //[Authorize]
+    
     public class CabanasController : ControllerBase
     {
         private AltaCabanas _altaCabanas;
@@ -250,7 +252,7 @@ namespace WebApi.Controllers
                 return Ok( list);
             }
             catch (CabanaLAException e) { return BadRequest(e.Message); }
-            catch (CabanaSearchException e) { return NotFound(e.Message); }
+            catch (CabanaSearchException e) { return NotFound("No se han encontrado cabanas"); }
             catch (CabanaControllerException e) { return BadRequest(e.Message); }
             catch (Exception e) { return BadRequest(e.Message); }
 

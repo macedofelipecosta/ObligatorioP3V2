@@ -28,24 +28,30 @@ namespace LogicaNegocio.Entidades
 
 
 
-        public Cabana() { }
+        public Cabana()
+        {
+            
+        }
 
-        //public Cabana(string nombre, string descripcion, string nombreTipo, bool jacuzzi,
-        //              bool habilitadoAReservas,
-        //              int capacidadHabitacion, string fotografia)
-        //{
-        //    Nombre = new Nombre(nombre);
-        //    Descripcion = new Descripcion(descripcion);
-        //    NombreTipo = new Nombre(nombreTipo);
-        //    Jacuzzi = new Jacuzzi(jacuzzi);
-        //    HabilitadoAReservas = new HabilitadaReserva(habilitadoAReservas);
-        //    CapacidadHabitacion = new CapacidadHabitacion(capacidadHabitacion);
-        //    Fotografia = new Fotografia(fotografia);
-        //}
+
 
         public void Validate()
         {
-          
+            HabNumberValidation(this.NumeroHabitacion);
+        }
+
+        private void HabNumberValidation(int data)
+        {
+            try
+            {
+                if (data < 0) throw new CabanaHabNumberException("El numero de habitacion no puede ser menor a cero!");
+            }
+            catch (CabanaHabNumberException e)
+            {
+
+                throw new CabanaHabNumberException(e.Message);
+            }
+
         }
     }
 }

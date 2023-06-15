@@ -10,6 +10,10 @@ using WebApi.Mapper;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 using WebApi.JWT;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Microsoft.AspNetCore.WebSockets;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -54,6 +58,35 @@ builder.Services.AddControllers();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+
+///<summary> Configuración de autenticación jwtToken</summary>
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    var configuration = new ConfigurationBuilder()
+                .SetBasePath(AppContext.BaseDirectory)
+                .AddJsonFile("jwTokenConfig.json")
+                .Build();
+
+    var secretKey = configuration.GetSection("JwtSettings:SecretKey").Value;
+
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = "Obligatorio2P3",
+        ValidAudience = "localHost",
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
+    };
+});
+
+
+
 
 ///<summary>
 ///</summary>
@@ -102,6 +135,7 @@ builder.Services.AddScoped<GetAll,GetAll>();
 builder.Services.AddScoped<MantenimientoCabanaId,MantenimientoCabanaId>();
 builder.Services.AddScoped<GetLastId,GetLastId>();
 builder.Services.AddScoped<VerificarMantenimiento,VerificarMantenimiento>();
+builder.Services.AddScoped<MantenimientoEntreCostos,MantenimientoEntreCostos>();
 
 //LogicaAplicacion Cabanas
 builder.Services.AddScoped<AltaCabanas, AltaCabanas>();
@@ -127,6 +161,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 

@@ -5,6 +5,7 @@ using LogicaConexion.Excepciones.TipoExcepciones;
 using LogicaNegocio.Entidades;
 using LogicaNegocio.Excepciones.MantenimientoExceptions;
 using Microsoft.IdentityModel.Tokens;
+using System.Globalization;
 
 namespace LogicaAplicacion.CasosDeUso.Mantenimientos
 {
@@ -23,9 +24,9 @@ namespace LogicaAplicacion.CasosDeUso.Mantenimientos
         {
             try
             {
-                var list = _mantenimientoXid.MantenimientoXidCabana(numeroHabitacion).OrderByDescending(x => x.Costo);
-                var aux = list.Where(x => x.FechaMantenimiento.Date >= fecha1.Date && x.FechaMantenimiento.Date <= fecha2.Date)
-                    .OrderByDescending(x => x.Costo).
+                var list = _mantenimientoXid.MantenimientoXidCabana(numeroHabitacion).OrderByDescending(x => x.Costo.Data);
+                var aux = list.Where(x => x.FechaMantenimiento.Date>=fecha1 && x.FechaMantenimiento.Date <= fecha2)
+                    .OrderByDescending(x => x.Costo.Data).
                     ToList();
                 if (aux.IsNullOrEmpty()) throw new MantenimientoLAException($"No se han obtenido mantenimientos entre las fechas {fecha1} y {fecha2} para el número de habitación {numeroHabitacion}! ");
                 return aux;

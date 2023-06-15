@@ -9,6 +9,7 @@ namespace WebApi.DTOs
 {
     public class CabanaDTO
     {
+        public int NumeroHabitacion {  get; set; }
         ///<summary></summary>
         ///
         public string Nombre { get; set; }

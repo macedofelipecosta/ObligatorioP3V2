@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LogicaNegocio.Excepciones.UsuarioException;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,16 +23,16 @@ namespace LogicaNegocio.ValueObject
         {
             try
             {
-                string patron = @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$";
+                string patron = @"^(?=.*[a-zñ])(?=.*[A-ZÑ])(?=.*\d)(?=.*[@$!%*?&])[A-Za-zñÑ\d@$!%*?&]{6,}$";
                 Match coincide = Regex.Match(data, patron);
                 if (!coincide.Success)
                 {
-                    throw new Exception("La contraseña no es válida!");
+                    throw new UsuarioPassWordException("La contraseña no es válida!");
                 }
             }
-            catch (Exception e)
+            catch (UsuarioPassWordException e)
             {
-                throw e;
+                throw new UsuarioPassWordException(e.Message);
             }
         }
 

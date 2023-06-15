@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LogicaNegocio.Excepciones.VOExceptions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,10 +23,10 @@ namespace LogicaNegocio.ValueObject
             {
                 if (string.IsNullOrEmpty(data))
                 {
-                    throw new Exception("El mantenimiento debe tener un operador!");
+                    throw new VOOperadorException("El mantenimiento debe tener un operador!");
                 }
             }
-            catch (Exception e)
+            catch (VOOperadorException e)
             {
                 throw e;
             }
