@@ -30,8 +30,8 @@ namespace LogicaAplicacion.CasosDeUso.Mantenimientos
         {
             try
             {
-                var list = _getAll.Listar_todos();
-                foreach (var item in list) { item.Cabana = _numHab.EncontrarNumHab(item.CabanaId); }
+                var list = _getAll.ListarTodos();
+                foreach (var item in list) { item.Cabana = _numHab.Obtener_Por_Id(item.CabanaId); }
                 var aux = list.Where(x=>x.Cabana.CapacidadHabitacion.Data>=valor1 && x.Cabana.CapacidadHabitacion.Data <= valor2).ToList();
 
                 return aux;

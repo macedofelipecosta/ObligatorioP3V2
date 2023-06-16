@@ -7,10 +7,11 @@ using LogicaConexion.Excepciones.CabanaExcepciones;
 using LogicaConexion.Excepciones.TipoExcepciones;
 using LogicaNegocio.Excepciones.MantenimientoExceptions;
 using LogicaConexion.Excepciones.MantenimientoExceptions;
+using LogicaNegocio.ValueObject;
 
 namespace LogicaAplicacion.CasosDeUso.Tipos
 {
-    public class EliminarTipos
+    public class EliminarTipos:IDelete<Tipo>
     {
         private RepositorioTipo _repositorioTipo;
 
@@ -19,11 +20,11 @@ namespace LogicaAplicacion.CasosDeUso.Tipos
             _repositorioTipo = repositorioTipo;
         }
 
-        public void DelteObj(string nombre)
+        public void DelteObj(Tipo obj)
         {
             try
             {
-                _repositorioTipo.Delete(nombre);
+                _repositorioTipo.Delete(obj.Nombre);
             }
             catch (CabanaContextException e) { throw new TipoLAException(e.Message); }
             catch (TipoContextException e) { throw new TipoLAException(e.Message); }
@@ -31,10 +32,5 @@ namespace LogicaAplicacion.CasosDeUso.Tipos
             catch (TipoLAException e) { throw new TipoLAException(e.Message); }
             catch (Exception e) { throw new TipoLAException(e.Message); }
         }
-
-       
-
-
-
     }
 }

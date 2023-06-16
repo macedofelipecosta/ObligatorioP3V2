@@ -61,7 +61,7 @@ namespace WebApi.Controllers
         {
             try
             {
-                List<MantenimientoDTO> list = _mapper.Map<List<MantenimientoDTO>>(_getAll.Listar_todos());
+                List<MantenimientoDTO> list = _mapper.Map<List<MantenimientoDTO>>(_getAll.ListarTodos());
 
                 if (list.IsNullOrEmpty()) throw new MantenimientoSearchException($"No se han encontrado mantenimientos!");
                 return Ok(list);
@@ -200,7 +200,7 @@ namespace WebApi.Controllers
 
                 Mantenimiento mantenimiento = _mapper.Map<Mantenimiento>(objDto);
 
-                Cabana cabana = _buscarCabana.EncontrarNumHab(objDto.CabanaId);
+                Cabana cabana = _buscarCabana.Obtener_Por_Id(objDto.CabanaId);
                 if (cabana == null) throw new MantenimientoSearchException("No se han encontrado cabañas con ese numero de habitación!");
 
                 _verificar.VerificarMantenimientos(objDto.CabanaId, objDto.FechaMantenimiento);

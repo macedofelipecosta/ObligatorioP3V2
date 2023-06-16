@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LogicaConexion.Migrations
 {
     [DbContext(typeof(HotelContext))]
-    [Migration("20230606193835_init")]
+    [Migration("20230616180816_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -49,7 +49,7 @@ namespace LogicaConexion.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CabanaNumeroHabitacion")
+                    b.Property<int>("CabanaId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("FechaMantenimiento")
@@ -57,7 +57,7 @@ namespace LogicaConexion.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CabanaNumeroHabitacion");
+                    b.HasIndex("CabanaId");
 
                     b.HasIndex("Id");
 
@@ -238,7 +238,7 @@ namespace LogicaConexion.Migrations
                 {
                     b.HasOne("LogicaNegocio.Entidades.Cabana", "Cabana")
                         .WithMany()
-                        .HasForeignKey("CabanaNumeroHabitacion")
+                        .HasForeignKey("CabanaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

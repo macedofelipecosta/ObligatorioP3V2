@@ -11,15 +11,20 @@ namespace LogicaAplicacion.CasosDeUso.Tipos
     public class ObtenerCostoPorPersona
     {
         private RepositorioTipo _repositorioTipo;
-        public ObtenerCostoPorPersona(RepositorioTipo reposiitorioTipo)
+        ListarTiposTodos _getAll;
+        public ObtenerCostoPorPersona(RepositorioTipo reposiitorioTipo, ListarTiposTodos getAll)
         {
             _repositorioTipo = reposiitorioTipo;
+            _getAll = getAll;
         }
-        public int GetCostoPersona(Tipo obj)
+        public IEnumerable<Tipo> FiltrarCosto(int costo)
         {
             try
             {
-                return _repositorioTipo.CostoPersona(obj.Nombre);
+                var tipos = _getAll.ListarTodos();
+                var lista = tipos.Where(x => x.CostoHuesped.Data >= 0 && x.CostoHuesped.Data < costo).ToList();
+                return lista;
+                
             }
             catch (CabanaContextException e) { throw new TipoLAException(e.Message); }
             catch (TipoContextException e) { throw new TipoLAException(e.Message); }

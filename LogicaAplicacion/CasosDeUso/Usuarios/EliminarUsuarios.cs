@@ -3,15 +3,16 @@ using LogicaConexion.EntityFramework;
 
 using LogicaAplicacion.Excepciones.UsuarioExceptions;
 using LogicaConexion.Excepciones.UsuarioExceptions;
+using LogicaAplicacion.CasosDeUso.Interfaces;
 
 namespace LogicaAplicacion.CasosDeUso.Usuarios
 {
-    public class EliminarUsuarios
+    public class EliminarUsuarios:IDelete<Usuario>
     {
         private RepositorioUsuario _repositorioUsuario;
         public EliminarUsuarios(RepositorioUsuario repositorioUsuario) { _repositorioUsuario = repositorioUsuario; }
 
-        public void EliminarUsuario(Usuario obj)
+        public void DelteObj(Usuario obj)
         {
             try
             {
@@ -19,7 +20,6 @@ namespace LogicaAplicacion.CasosDeUso.Usuarios
             }
             catch (UsuarioContextException e) { throw new UsuarioLAException(e.Message); }
             catch (Exception e) { throw new UsuarioLAException(e.Message); };
-
         }
     }
 }

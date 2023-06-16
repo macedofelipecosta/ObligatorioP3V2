@@ -1,4 +1,5 @@
-﻿using LogicaAplicacion.Excepciones.TipoExcepciones;
+﻿using LogicaAplicacion.CasosDeUso.Interfaces;
+using LogicaAplicacion.Excepciones.TipoExcepciones;
 using LogicaConexion.EntityFramework;
 using LogicaConexion.Excepciones.CabanaExcepciones;
 using LogicaConexion.Excepciones.MantenimientoExceptions;
@@ -34,9 +35,5 @@ namespace LogicaAplicacion.CasosDeUso.Tipos
         }
 
         
-
-        
-        
-
     }
 }

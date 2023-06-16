@@ -9,6 +9,9 @@ using LogicaAplicacion.Excepciones.CabanaExcepciones;
 
 using WebApi.Excepciones.CabanaExceptions;
 using Microsoft.AspNetCore.Authorization;
+using LogicaAplicacion.CasosDeUso.Tipos;
+using NuGet.Versioning;
+using LogicaAplicacion.Excepciones.TipoExcepciones;
 
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -18,7 +21,7 @@ namespace WebApi.Controllers
     [Authorize]
     [Route("api/v1/Cabanas")]
     [ApiController]
-    
+
     public class CabanasController : ControllerBase
     {
         private AltaCabanas _altaCabanas;
@@ -30,7 +33,7 @@ namespace WebApi.Controllers
         private ListaPorNumeroPersonas _listaPorNumeroPersonas;
         private ListarCabanaPorTipo _listarCabanaPorTipo;
         private ListarCabanasTodas _listarCabanasTodas;
-        private IWebHostEnvironment _environment;
+        private ObtenerCostoPorPersona _obtenerCosto;
         private IMapper _mapper;
 
 
@@ -42,7 +45,7 @@ namespace WebApi.Controllers
                                         ListaPorNumeroPersonas listaPorNumeroPersonas,
                                         ListarCabanaPorTipo listarCabanaPorTipo,
                                         ListarCabanasTodas listarCabanasTodas,
-                                        IWebHostEnvironment environment,
+                                        ObtenerCostoPorPersona obtenercosto,
                                         Ultimo_Id ultimoId,
                                         IMapper mapper
                                         )
@@ -55,7 +58,7 @@ namespace WebApi.Controllers
             _listaPorNumeroPersonas = listaPorNumeroPersonas;
             _listarCabanaPorTipo = listarCabanaPorTipo;
             _listarCabanasTodas = listarCabanasTodas;
-            _environment = environment;
+            _obtenerCosto = obtenercosto;
             _ultimoId = ultimoId;
             _mapper = mapper;
         }
@@ -101,7 +104,7 @@ namespace WebApi.Controllers
         {
             try
             {
-                CabanaDTO cabanaDto = _mapper.Map<CabanaDTO>(_buscarNumeroHabitacion.EncontrarNumHab(id));
+                CabanaDTO cabanaDto = _mapper.Map<CabanaDTO>(_buscarNumeroHabitacion.Obtener_Por_Id(id));
                 if (cabanaDto == null) { throw new CabanaSearchException($"No se han encontrado cabañas con el número de habitación {id}!"); }
                 return Ok(cabanaDto);
             }
@@ -154,13 +157,13 @@ namespace WebApi.Controllers
                 if (Nombre != null)
                 {
                     var resultado = _listaCabanaPorNombre.Lista_Filtrada_Nombre(Nombre);
-                    if (resultado.IsNullOrEmpty())throw new CabanaSearchException($"No se ha encontrado la cabaña :{Nombre}! ");
-                    
+                    if (resultado.IsNullOrEmpty()) throw new CabanaSearchException($"No se ha encontrado la cabaña :{Nombre}! ");
+
                     List<CabanaDTO> list = _mapper.Map<List<CabanaDTO>>(resultado);
                     return Ok(list);
                 }
                 else throw new CabanaControllerException("No se ha recibido ningún nombre para buscar!");
-                
+
             }
             catch (CabanaLAException e) { return BadRequest(e.Message); }
             catch (CabanaSearchException e) { return NotFound(e.Message); }
@@ -249,8 +252,36 @@ namespace WebApi.Controllers
                     throw new CabanaSearchException($"No se han encontrado cabañas con alquiler habilitado!");
                 }
                 List<CabanaDTO> list = _mapper.Map<List<CabanaDTO>>(resultado);
-                return Ok( list);
+                return Ok(list);
             }
+            catch (CabanaLAException e) { return BadRequest(e.Message); }
+            catch (CabanaSearchException e) { return NotFound("No se han encontrado cabanas"); }
+            catch (CabanaControllerException e) { return BadRequest(e.Message); }
+            catch (Exception e) { return BadRequest(e.Message); }
+
+        }
+
+
+        [HttpGet("~/BuscarPorCosto")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public IActionResult BuscarPorCosto(int costo)
+        {
+            try
+            {
+                var tipos = _obtenerCosto.FiltrarCosto(costo);
+                var cabanas = _listarCabanasTodas.ListarTodos();
+                //var aux = cabanas.Where(x => tipos.Any(t => t.Nombre == x.NombreTipo.Data)).ToList();
+                var aux = cabanas.Where(x => tipos.Any(t => t.Nombre.Equals(x.NombreTipo.Data))).ToList();
+                var aux1 = aux.Where(x => x.Jacuzzi.Data == true && x.HabilitadoAReservas.Data == true).ToList();
+
+                List<CabanaDTO> list = _mapper.Map<List<CabanaDTO>>(aux1);
+                return Ok(list);
+
+            }
+            catch (TipoLAException e) { return BadRequest(e.Message); }
             catch (CabanaLAException e) { return BadRequest(e.Message); }
             catch (CabanaSearchException e) { return NotFound("No se han encontrado cabanas"); }
             catch (CabanaControllerException e) { return BadRequest(e.Message); }

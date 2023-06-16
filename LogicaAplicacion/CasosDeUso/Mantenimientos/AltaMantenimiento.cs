@@ -23,7 +23,7 @@ namespace LogicaAplicacion.CasosDeUso.Mantenimientos
         {
             try
             {
-                var cabana=_repoCabana.EncontrarNumHab(obj.CabanaId);
+                var cabana=_repoCabana.Obtener_Por_Id(obj.CabanaId);
                 obj.Cabana = cabana;
                 _repoMantenimiento.Add(obj);
             }

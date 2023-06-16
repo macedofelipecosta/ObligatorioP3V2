@@ -1,4 +1,5 @@
-﻿using LogicaConexion.EntityFramework;
+﻿using LogicaAplicacion.CasosDeUso.Interfaces;
+using LogicaConexion.EntityFramework;
 using LogicaConexion.Excepciones.CabanaExcepciones;
 using LogicaConexion.Excepciones.MantenimientoExceptions;
 using LogicaConexion.Excepciones.TipoExcepciones;
@@ -7,7 +8,7 @@ using LogicaNegocio.Excepciones.MantenimientoExceptions;
 
 namespace LogicaAplicacion.CasosDeUso.Mantenimientos
 {
-    public class GetAll
+    public class GetAll:IGetAll<Mantenimiento>
     {
         private RepositorioMantenimiento _repositorioMantenimiento;
 
@@ -16,7 +17,7 @@ namespace LogicaAplicacion.CasosDeUso.Mantenimientos
             _repositorioMantenimiento = repositorioMantenimiento;
         }
 
-        public IEnumerable<Mantenimiento> Listar_todos()
+        public IEnumerable<Mantenimiento> ListarTodos()
         {
             try
             {   

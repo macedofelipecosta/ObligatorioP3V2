@@ -173,7 +173,8 @@ namespace WebApi.Controllers
         {
             try
             {
-                _eliminarTipos.DelteObj(nombre);
+                var tipo=_encontrarTipo.Encontrar_Tipo(nombre);
+                _eliminarTipos.DelteObj(tipo);
 
                 return Ok($"Se ha eliminado el tipo de cabaña {nombre} correctamente!");
             }
