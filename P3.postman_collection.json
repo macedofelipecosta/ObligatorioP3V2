@@ -1,0 +1,667 @@
+{
+	"info": {
+		"_postman_id": "3ec8ffed-a5ad-4aed-92b5-dff3d8189724",
+		"name": "P3",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "19395702"
+	},
+	"item": [
+		{
+			"name": "Cabanas",
+			"item": [
+				{
+					"name": "Cabanas-GetAll",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:7122/GetAll",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7122",
+							"path": [
+								"GetAll"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cabanas-Get",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "id",
+								"value": "5",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "https://localhost:7122/Get?id=5",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7122",
+							"path": [
+								"Get"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "5"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cabanas-BuscarPorNombre",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:7122/BuscarNombre?Nombre=Twin",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7122",
+							"path": [
+								"BuscarNombre"
+							],
+							"query": [
+								{
+									"key": "Nombre",
+									"value": "Twin"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cabanas-BuscarPorNombreTipo",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlbWFpbEBlbWFpbC5jb20iLCJqdGkiOiI5ZWFmZDA5Zi03MTVjLTQ3NzgtODIzNC0zOWE5ZDhjNWZjMDIiLCJleHAiOjE2ODY3NzQ0NTEsImlzcyI6Ik9ibGlnYXRvcmlvMlAzIiwiYXVkIjoibG9jYWxIb3N0In0.KGlIHYdCmoWcQnVFt4trxFsbEHipao1Jepur9HZ0ErE",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:7122/BuscarTipo?NombreTipo=Doble",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7122",
+							"path": [
+								"BuscarTipo"
+							],
+							"query": [
+								{
+									"key": "NombreTipo",
+									"value": "Doble"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "BuscarPorCapacidad",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:7122/BuscarNumeroPersonas?NumeroPersonas=10",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7122",
+							"path": [
+								"BuscarNumeroPersonas"
+							],
+							"query": [
+								{
+									"key": "NumeroPersonas",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "BuscarPorHabilitacionAlquilar",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:7122/AlquilerHabilitado?HabilitadoAReservas=false",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7122",
+							"path": [
+								"AlquilerHabilitado"
+							],
+							"query": [
+								{
+									"key": "HabilitadoAReservas",
+									"value": "false"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CrearCabana",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombre\": \"PruebaPostman5\",\r\n    \"descripcion\": \"PruebaPostman\",\r\n    \"nombreTipo\": \"Estudio\",\r\n    \"jacuzzi\": true,\r\n    \"habilitadoAReservas\": true,\r\n    \"capacidadHabitacion\": 10,\r\n    \"fotografia\": \"string\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:7122/CrearCabana",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7122",
+							"path": [
+								"CrearCabana"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "BuscarPorCosto",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlbWFpbEBlbWFpbC5jb20iLCJqdGkiOiJkOGY5NDgwOS0wY2Q1LTQ5M2QtOTg0ZS02ZWYyNWI2YTQ5ZmYiLCJleHAiOjE2ODY5MzgxMDQsImlzcyI6Ik9ibGlnYXRvcmlvMlAzIiwiYXVkIjoibG9jYWxIb3N0In0.FhjP7Tn4zpnsb_enPZRXSYcll5UUOMZQurkloNo79QI",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:7122/BuscarPorCosto?costo=200",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7122",
+							"path": [
+								"BuscarPorCosto"
+							],
+							"query": [
+								{
+									"key": "costo",
+									"value": "200"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Mantenimientos",
+			"item": [
+				{
+					"name": "GetAll",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:7122/Mantenimientos/GetAll",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7122",
+							"path": [
+								"Mantenimientos",
+								"GetAll"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "MantenimientosCabana",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:7122/Mantenimientos/MantenimientosCabana?cabanaId=2",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7122",
+							"path": [
+								"Mantenimientos",
+								"MantenimientosCabana"
+							],
+							"query": [
+								{
+									"key": "cabanaId",
+									"value": "2",
+									"description": "devuelve los mantenimientos realizados en este id de cabaña"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "MantenimientosEntreFechas",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlbWFpbEBlbWFpbC5jb20iLCJqdGkiOiJhZWExMzUyOC1jNGEzLTQ3OTktYWFlOS0yMGQ2ZDYwZmQ2YjUiLCJleHAiOjE2ODY3OTIwMjAsImlzcyI6Ik9ibGlnYXRvcmlvMlAzIiwiYXVkIjoibG9jYWxIb3N0In0.m7FipLAp7Vv6MAE0q7F733DdPpKeM_TdOTJFhAA7kuc",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:7122/Mantenimientos/MantenimientosEntreFechas?fecha1=01/06/2023 00:00:00&fecha2=14/06/2023 00:00:00&numeroHabitacion=1",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7122",
+							"path": [
+								"Mantenimientos",
+								"MantenimientosEntreFechas"
+							],
+							"query": [
+								{
+									"key": "fecha1",
+									"value": "01/06/2023 00:00:00"
+								},
+								{
+									"key": "fecha2",
+									"value": "14/06/2023 00:00:00"
+								},
+								{
+									"key": "numeroHabitacion",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AltaMantenimiento",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"id\": 0,\r\n  \"fechaMantenimiento\": \"2023-06-13T19:03:00.351Z\",\r\n  \"descripcion\": \"string\",\r\n  \"costo\": 150,\r\n  \"operador\": \"DINARA\",\r\n  \"cabanaId\": 6\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:7122/Mantenimientos/AltaMantenimiento?cabanaId=6",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7122",
+							"path": [
+								"Mantenimientos",
+								"AltaMantenimiento"
+							],
+							"query": [
+								{
+									"key": "cabanaId",
+									"value": "6"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "EntreCostos",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlbWFpbEBlbWFpbC5jb20iLCJqdGkiOiIzNmZjMTBlOC1jYWVjLTRkZDktYWE3ZC1jOGU0ZGQ1MjMwYTgiLCJleHAiOjE2ODc0NTMzMzYsImlzcyI6Ik9ibGlnYXRvcmlvMlAzIiwiYXVkIjoibG9jYWxIb3N0In0.YbTMgMormlPoAcVyw5Yqavotc9HwUakJAJ5N0OTEC00",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:7122/Mantenimientos/EntreCostos?valor1=1&valor2=4",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7122",
+							"path": [
+								"Mantenimientos",
+								"EntreCostos"
+							],
+							"query": [
+								{
+									"key": "valor1",
+									"value": "1"
+								},
+								{
+									"key": "valor2",
+									"value": "4"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Tipos",
+			"item": [
+				{
+					"name": "GetAll",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlbWFpbEBlbWFpbC5jb20iLCJqdGkiOiJiZWIzNGU1Ni04NTJhLTQ3ZGQtODA0Mi0yYjFkMzE0ZDg5MWEiLCJleHAiOjE2ODY3NzEwNTgsImlzcyI6Ik9ibGlnYXRvcmlvMlAzIiwiYXVkIjoibG9jYWxIb3N0In0.NlXMXK0pi0qNBVIbvpmnFYABwLTKkSv1tRZJo8gD1U4",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:7122/Tipos/GetAll",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7122",
+							"path": [
+								"Tipos",
+								"GetAll"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ObtenerPorNombre",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "dato",
+								"value": "Estu",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "javascript"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:7122/Tipos/GetByName?dato=",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7122",
+							"path": [
+								"Tipos",
+								"GetByName"
+							],
+							"query": [
+								{
+									"key": "dato",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"nombre\": \"PruebaPostMan\",\r\n  \"descripcion\": \"PruebaPostMan para borrar\",\r\n  \"costoHuesped\": 1000\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:7122/Tipos/Create",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7122",
+							"path": [
+								"Tipos",
+								"Create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:7122/Tipos/Update?nombre=&descripcion=&costoHuesped=",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7122",
+							"path": [
+								"Tipos",
+								"Update"
+							],
+							"query": [
+								{
+									"key": "nombre",
+									"value": "",
+									"description": "Este es el nombre del tipo al cual se le modificara la descripcion y el costo por huesped"
+								},
+								{
+									"key": "descripcion",
+									"value": "",
+									"description": "aqui va la nueva descripcion"
+								},
+								{
+									"key": "costoHuesped",
+									"value": "",
+									"description": "aqui va el nuevo costo por huesped"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlbWFpbEBlbWFpbC5jb20iLCJqdGkiOiJiZWIzNGU1Ni04NTJhLTQ3ZGQtODA0Mi0yYjFkMzE0ZDg5MWEiLCJleHAiOjE2ODY3NzEwNTgsImlzcyI6Ik9ibGlnYXRvcmlvMlAzIiwiYXVkIjoibG9jYWxIb3N0In0.NlXMXK0pi0qNBVIbvpmnFYABwLTKkSv1tRZJo8gD1U4",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:7122/Tipos/EliminarTipo?nombre=Prueba130623",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7122",
+							"path": [
+								"Tipos",
+								"EliminarTipo"
+							],
+							"query": [
+								{
+									"key": "nombre",
+									"value": "Prueba130623"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Usuarios",
+			"item": [
+				{
+					"name": "InicioSesion",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"email@email.com\",\r\n  \"password\": \"Password123!\"\r\n}\r\n\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:7122/Usuarios/IniciarSesion",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7122",
+							"path": [
+								"Usuarios",
+								"IniciarSesion"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\"Email\":\"prueba@email.com\",\r\n\"Password\":\"Password123!\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:7122/Usuarios/Create",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7122",
+							"path": [
+								"Usuarios",
+								"Create"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
